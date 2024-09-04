@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.env
+*.venv
+*.envrc
+python-*.egg-info/
+
+# Distribution / Packaging
+dist/
+*.egg-info/
+.eggs/
+*.wheel
+pip-log.txt
+pip-delete-this-directory.txt
+
+# JavaScript 
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Production
+dist/
+
+# Docker
+docker-compose.yml
+.dockerignore
+docker-compose.override.yml
+docker-compose.*.yml
+
+# Visual Studio Code
+.vscode/
+.history/
+*.code-workspace
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+*.dll
+*.so
+*.dylib
+
+# Virtual environments
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.project
+.settings/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
