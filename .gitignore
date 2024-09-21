@@ -30,6 +30,9 @@ npm-debug.log*
 # Production
 dist/
 
+# Build
+build/
+
 # Docker
 docker-compose.yml
 .dockerignore
