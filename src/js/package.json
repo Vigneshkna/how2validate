@@ -1,0 +1,27 @@
+{
+  "name": "how2validate",
+  "version": "0.0.1",
+  "description": "A cli and package for validating secrets.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Blackplums/how2validate.git"
+  },
+  "keywords": [
+    "secret",
+    "how2validate",
+    "secretvalidate"
+  ],
+  "author": "Vigneshkna",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Blackplums/how2validate/issues"
+  },
+  "homepage": "https://github.com/Blackplums/how2validate#readme",
+  "dependencies": {
+    "jsr": "^0.13.2"
+  }
+}
