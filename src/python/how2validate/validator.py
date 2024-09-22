@@ -2,7 +2,7 @@ import argparse
 import logging
 
 from how2validate.utility.config_utility import get_active_secret_status, get_inactive_secret_status, get_package_name, get_version
-from how2validate.utility.tool_utility import format_serviceprovider, format_services, get_secretprovider, get_secretservices, redact_secret, update_tool, validate_choice
+from how2validate.utility.tool_utility import format_serviceprovider, format_services, format_string, get_secretprovider, get_secretservices, redact_secret, update_tool, validate_choice
 from how2validate.utility.log_utility import setup_logging
 from how2validate.handler.validator_handler import validator_handle_service
 
@@ -50,9 +50,9 @@ def parse_arguments():
 def validate(provider,service, secret, response, report):
     
     logging.info(f"Started validating secret...")
-    result = validator_handle_service(service, secret, response, report)
+    result = validator_handle_service(format_string(service), secret, response, report)
     logging.info(f"{result}")
-    return f"{result}"
+    # return f"{result}"
 
 def main(args=None):
     if args is None:

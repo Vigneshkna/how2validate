@@ -30,7 +30,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data={
-        '': ['*.txt', '../requirements.txt', '../config.ini', '../tokenManager.json', '../README.md', '../main.py'],
+        '': ['../requirements.txt', '../config.ini', '../tokenManager.json', '../README.md', '../main.py'],
     },
     install_requires=requirements,
     entry_points={
