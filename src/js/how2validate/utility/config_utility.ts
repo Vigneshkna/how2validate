@@ -1,11 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as ini from 'ini';
-import { fileURLToPath } from 'url';
-
-// Get the current file's path in ES module format
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 interface Config {
   DEFAULT?: {
@@ -20,9 +15,20 @@ interface Config {
 
 let config: Config | null = null;
 
+function getConfigFilePath() {
+    if (process.env.NODE_ENV === 'production') {
+      // Assuming your config.ini is in the dist folder when published
+      return path.resolve(__dirname, '..', 'config.ini');
+    } else {
+      // For local development
+      return path.resolve(__dirname, '..', '..', 'config.ini');
+    }
+  }
+  
 export function initConfig() {
   // Path to the config.ini file, relative to where your compiled JavaScript will be running (in dist)
-  const configFilePath = path.resolve(__dirname, '..', '..', 'config.ini'); // Adjusted for dist directory
+  const configFilePath = getConfigFilePath();
+  //const configFilePath = path.resolve(__dirname, '..', '..', 'config.ini'); // Adjusted for dist directory
 
   try {
     const configContent = fs.readFileSync(configFilePath, 'utf-8');

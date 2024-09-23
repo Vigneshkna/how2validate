@@ -2,7 +2,7 @@ import * as logging from 'loglevel';
 import { getActiveSecretStatus, getInactiveSecretStatus } from './config_utility';
 
 export function setupLogging() {
-  logging.setLevel('info'); // Set logging level to INFO
+  logging.setLevel("INFO"); // Set logging level to INFO
 }
 
 export function getSecretStatusMessage(service: string, isActive: string, response?: boolean, responseData?: any): string {
