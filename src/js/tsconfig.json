@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES6",                         // JavaScript version to compile to
-    "module": "CommonJS",                    // Module system (Node.js uses CommonJS)
-    "outDir": "./dist",                      // Output directory for compiled JS files
-    "rootDir": "./how2validate",                      // Directory containing TypeScript source files
-    "strict": true,                          // Enable all strict type-checking options
-    "esModuleInterop": true,                 // Enable ES6 import/export interoperability
-    "skipLibCheck": true,                    // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true // Ensure consistent file name casing
+    "target": "ES6",                         // Specifies the JavaScript version to compile to. ES6 (also known as ES2015) is a widely supported version.
+    "module": "CommonJS",                    // Defines the module system to use. CommonJS is the standard for Node.js modules.
+    "outDir": "./dist",                      // The output directory where compiled JavaScript files will be placed.
+    "rootDir": "./how2validate",             // The root directory of your TypeScript source files; all files under this directory will be included in the compilation.
+    "strict": true,                          // Enables all strict type-checking options for more rigorous checks.
+    "esModuleInterop": true,                 // Allows default imports from modules with no default export. Enables interoperability between CommonJS and ES modules.
+    "skipLibCheck": true,                    // Skips type checking of declaration files (e.g., `.d.ts` files), speeding up the compilation process.
+    "forceConsistentCasingInFileNames": true // Ensures that file name casing is consistent across the project to prevent errors on case-sensitive file systems.
   },
-  "include": ["how2validate/**/*"]                    // Specifies which files to include in the project
+  "include": ["how2validate/**/*"]           // Specifies which files to include in the project; here, it includes all files in the `how2validate` directory and its subdirectories.
 }
