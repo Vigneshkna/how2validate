@@ -1,19 +1,21 @@
 {
   "name": "how2validate",
   "version": "0.0.1",
-  "description": "A cli and package for validating secrets.",
-  "main": "index.ts",
+  "description": "A CLI tool to validate secrets for different services.",
+  "main": "how2validate/index.ts",
   "scripts": {
-    "test": "node test"
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Blackplums/how2validate.git"
   },
   "keywords": [
-    "secret",
+    "secrets",
     "how2validate",
-    "secretvalidate"
+    "secret-validation",
+    "secrets-management"
   ],
   "author": "Vigneshkna",
   "license": "MIT",
@@ -22,6 +24,15 @@
   },
   "homepage": "https://github.com/Blackplums/how2validate#readme",
   "dependencies": {
-    "jsr": "^0.13.2"
+    "axios": "^1.7.7",
+    "commander": "^12.1.0",
+    "ini": "^5.0.0",
+    "jsr": "^0.13.2",
+    "loglevel": "^1.9.2"
+  },
+  "devDependencies": {
+    "@types/ini": "^4.1.1",
+    "@types/node": "^22.5.5",
+    "typescript": "^5.6.2"
   }
 }

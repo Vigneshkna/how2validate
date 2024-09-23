@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                         // JavaScript version to compile to
+    "module": "commonjs",                    // Module system (Node.js uses CommonJS)
+    "outDir": "./dist",                      // Output directory for compiled JS files
+    "rootDir": "./how2validate",                      // Directory containing TypeScript source files
+    "strict": true,                          // Enable all strict type-checking options
+    "esModuleInterop": true,                 // Enable ES6 import/export interoperability
+    "skipLibCheck": true,                    // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true // Ensure consistent file name casing
+  },
+  "include": ["how2validate/**/*"]                    // Specifies which files to include in the project
+}

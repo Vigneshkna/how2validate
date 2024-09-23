@@ -2,5 +2,15 @@
     "name": "@how2validate/how2validate",
     "version": "0.0.1",
     "license": "MIT",
-    "exports": "./index.ts"
-  }
+    "exports": "./how2validate/index.ts",
+    "publish": {
+        "include": [
+            "LICENSE",
+            "README.md",
+            "config.ini",
+            "tokenManager.json",
+            "how2validate"
+            ],
+        "exclude": ["tests"]
+    }
+}
