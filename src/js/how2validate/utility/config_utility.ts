@@ -1,6 +1,11 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as ini from 'ini';
+import { fileURLToPath } from 'url';
+
+// Get the current file's path in ES module format
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface Config {
   DEFAULT?: {
