@@ -38,16 +38,16 @@ const serviceChoices = getSecretServices(); // Get supported secret services
 // Define CLI options using Commander
 program
   .option(
-    "-provider <provider>",
+    "-provider <PROVIDER>",
     `Secret provider to validate secrets\nSupported providers:\n${formatServiceProviders()}`,
     (value) => validateChoice(value, providerChoices)
   ) // Option for provider
   .option(
-    "-service <service>",
+    "-service <SERVICE>",
     `Service / SecretType to validate secrets\nSupported services:\n${formatServices()}`,
     (value) => validateChoice(value, serviceChoices)
   ) // Option for service
-  .option("-secret <secret>", "Pass the secret to be validated") // Option for secret
+  .option("-secret <SECRET>", "Pass the secret to be validated") // Option for secret
   .option(
     "-r, --response",
     `Prints ${getActiveSecretStatus()} / ${getInactiveSecretStatus()} upon validating secrets`
@@ -56,7 +56,7 @@ program
   .option("--update", "Hack the tool to the latest version"); // Option to update the tool
 
 // Function to validate the secret using the specified provider and service
-async function validate(
+export async function validate(
   provider: string,
   service: string,
   secret: string,
