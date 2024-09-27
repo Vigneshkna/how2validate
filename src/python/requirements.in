@@ -12,3 +12,4 @@ pyOpenSSL
 wheel
 pymongo
 python-dotenv
+tabulate
