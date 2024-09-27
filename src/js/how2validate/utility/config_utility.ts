@@ -1,5 +1,5 @@
-import * as path from "path";
-import * as fs from "fs";
+const fs = require('fs');
+const path = require('path');
 
 interface Config {
   DEFAULT?: {
