@@ -14,19 +14,29 @@ interface Config {
 
 let config: Config | null = null;
 
-export function initConfig() {
-  const configFilePath = path.resolve(__dirname, "..", "..", "config.ini");
+/**
+ * Initialize the configuration by reading the config.ini file.
+ * Optionally accepts a custom file path.
+ * @param {string} [configFilePath] - The custom file path for config.ini (optional).
+ */
+export function initConfig(configFilePath?: string) {
+  const resolvedPath = configFilePath || path.resolve(__dirname, "..", "..", "config.ini");
 
   try {
-    const configContent = fs.readFileSync(configFilePath, "utf-8");
+    const configContent = fs.readFileSync(resolvedPath, "utf-8");
     config = parseConfigContent(configContent); // Use a custom parsing function
   } catch (error) {
     console.error(
-      `Error: The file '${configFilePath}' was not found or could not be read.`
+      `Error: The file '${resolvedPath}' was not found or could not be read.`
     );
   }
 }
 
+/**
+ * Parse the content of the config.ini file and convert it to a Config object.
+ * @param {string} content - The content of the config.ini file.
+ * @returns {Config} - The parsed configuration object.
+ */
 function parseConfigContent(content: string): Config {
   const lines = content.split("\n");
   const result: Config = {};
@@ -45,8 +55,7 @@ function parseConfigContent(content: string): Config {
       const [key, value] = trimmedLine.split("=").map((part) => part.trim());
 
       // Using type assertion to tell TypeScript that currentSection is valid
-      (result[currentSection] as Record<string, string | undefined>)[key] =
-        value;
+      (result[currentSection] as Record<string, string | undefined>)[key] = value;
     }
   }
 
@@ -62,7 +71,6 @@ export function getPackageName(): string | undefined {
   }
 }
 
-// Function to get the active secret status from the SECRET section
 export function getActiveSecretStatus(): string | undefined {
   if (config && config.SECRET) {
     return config.SECRET.secret_active as string;
@@ -71,7 +79,6 @@ export function getActiveSecretStatus(): string | undefined {
   }
 }
 
-// Function to get the inactive secret status from the SECRET section
 export function getInactiveSecretStatus(): string | undefined {
   if (config && config.SECRET) {
     return config.SECRET.secret_inactive as string;
@@ -80,7 +87,6 @@ export function getInactiveSecretStatus(): string | undefined {
   }
 }
 
-// Function to get the version from the DEFAULT section
 export function getVersion(): string | undefined {
   if (config && config.DEFAULT) {
     return config.DEFAULT.version as string;
@@ -89,5 +95,5 @@ export function getVersion(): string | undefined {
   }
 }
 
-// Call initConfig when this file is imported or used
+// Automatically initialize config when the file is imported
 initConfig();

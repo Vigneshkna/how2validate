@@ -1,6 +1,6 @@
 {
     "name": "@how2validate/how2validate",
-    "version": "0.0.2-beta.6",
+    "version": "0.0.2-beta.7",
     "license": "MIT",
     "exports": "./how2validate/index.ts",
     "publish": {

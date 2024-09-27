@@ -1,5 +1,3 @@
-import * as fs from "fs"; // Import the file system module for file operations
-import * as path from "path"; // Import the path module for handling file paths
 import axios from "axios"; // Import Axios for making HTTP requests
 import {
   getActiveSecretStatus,
@@ -9,11 +7,13 @@ import { getSecretStatusMessage } from "../../utility/log_utility"; // Import fu
 
 /**
  * Validate a Snyk authentication key by making an API request to check its validity.
- * @param service - The name of the service being validated.
- * @param secret - The Snyk API key (token) to validate.
- * @param response - A flag to indicate whether to include detailed response data.
- * @param report - An optional flag for additional reporting features.
- * @returns A promise that resolves to a status message about the authentication key validation.
+ * 
+ * @param {string} service - The name of the service being validated.
+ * @param {string} secret - The Snyk API key (token) to validate.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {boolean} [report] - An optional flag for additional reporting features.
+ * 
+ * @returns {Promise<string>} - A promise that resolves to a status message about the authentication key validation.
  */
 export async function validateSnykAuthKey(
   service: string,
@@ -64,10 +64,12 @@ export async function validateSnykAuthKey(
 
 /**
  * Handle the case when the authentication key is inactive or invalid.
- * @param service - The name of the service being validated.
- * @param response - A flag to indicate whether to include detailed response data.
- * @param responseData - Optional additional data to include in the response.
- * @returns A formatted status message indicating the inactive status.
+ * 
+ * @param {string} service - The name of the service being validated.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {any} [responseData] - Optional additional data to include in the response.
+ * 
+ * @returns {string} - A formatted status message indicating the inactive status.
  */
 function handleInactiveResponse(
   service: string,
@@ -94,10 +96,12 @@ function handleInactiveResponse(
 
 /**
  * Handle errors that occur during the validation process.
- * @param service - The name of the service being validated.
- * @param response - A flag to indicate whether to include detailed response data.
- * @param error - The error object that was thrown.
- * @returns A formatted status message based on the type of error encountered.
+ * 
+ * @param {string} service - The name of the service being validated.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {any} error - The error object that was thrown.
+ * 
+ * @returns {string} - A formatted status message based on the type of error encountered.
  */
 function handleError(service: string, response: boolean, error: any): string {
   let errorMessage = "";

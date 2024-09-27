@@ -7,11 +7,13 @@ import { getSecretStatusMessage } from "../../utility/log_utility"; // Import fu
 
 /**
  * Validate an NPM access token by making an API request to check its validity.
- * @param service - The name of the service being validated (in this case, NPM).
- * @param secret - The NPM access token to validate.
- * @param response - A flag to indicate whether to include detailed response data.
- * @param report - An optional flag for additional reporting features.
- * @returns A promise that resolves to a status message about the access token validation.
+ * 
+ * @param {string} service - The name of the service being validated (in this case, NPM).
+ * @param {string} secret - The NPM access token to validate.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {boolean} [report] - An optional flag for additional reporting features.
+ * 
+ * @returns {Promise<string>} - A promise that resolves to a status message about the access token validation.
  */
 export async function validateNpmAccessToken(
   service: string,
@@ -62,10 +64,12 @@ export async function validateNpmAccessToken(
 
 /**
  * Handle the case when the NPM access token is inactive or invalid.
- * @param service - The name of the service being validated (NPM).
- * @param response - A flag to indicate whether to include detailed response data.
- * @param data - Optional additional data to include in the response.
- * @returns A formatted status message indicating the inactive status.
+ * 
+ * @param {string} service - The name of the service being validated (NPM).
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {any} [data] - Optional additional data to include in the response.
+ * 
+ * @returns {string} - A formatted status message indicating the inactive status.
  */
 function handleInactiveStatus(
   service: string,
@@ -92,10 +96,12 @@ function handleInactiveStatus(
 
 /**
  * Handle errors that occur during the validation process.
- * @param error - The error object that was thrown during the request.
- * @param service - The name of the service being validated (NPM).
- * @param response - A flag to indicate whether to include detailed response data.
- * @returns A formatted status message based on the type of error encountered.
+ * 
+ * @param {unknown} error - The error object that was thrown during the request.
+ * @param {string} service - The name of the service being validated (NPM).
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * 
+ * @returns {string} - A formatted status message based on the type of error encountered.
  */
 function handleErrors(
   error: unknown,

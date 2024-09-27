@@ -3,16 +3,12 @@ import { setupLogging } from "./utility/log_utility"; // Importing the logging s
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-  getPackageName,
   getVersion,
 } from "./utility/config_utility"; // Importing configuration utility functions
 import {
-  formatServiceProviders,
-  formatServices,
   getSecretProviders,
   getSecretscope,
   getSecretServices,
-  redactSecret,
   updateTool,
   validateChoice,
 } from "./utility/tool_utility"; // Importing utility functions for secret validation
@@ -36,38 +32,57 @@ program
 const providerChoices = getSecretProviders(); // Get supported secret providers
 const serviceChoices = getSecretServices(); // Get supported secret services
 
-// Define CLI options using Commander
+/**
+ * Define CLI options using Commander.
+ * - secretscope: Option for secret scope
+ * - provider: Option to specify a provider with validation
+ * - service: Option to specify a service with validation
+ * - secret: Option to specify the secret to validate
+ * - response: Option to check if the secret is active or inactive
+ * - report: Option to get reports via email (Alpha feature)
+ * - update: Option to update the tool
+ */
 program
   .option(
     "-secretscope",
     `Explore the secret universe. Your next target awaits.`
-  ) // Option for secret scope
+  )
   .option(
     "-provider <PROVIDER>",
     `Specify your provider. Unleash your validation arsenal.`,
     (value) => validateChoice(value, providerChoices)
-  ) // Option for provider
+  )
   .option(
     "-service <SERVICE>",
     `Specify your target service. Validate your secrets with precision.`,
     (value) => validateChoice(value, serviceChoices)
-  ) // Option for service
-  .option("-secret <SECRET>", "Unveil your secrets to verify their authenticity.") // Option for secret
+  )
+  .option("-secret <SECRET>", "Unveil your secrets to verify their authenticity.")
   .option(
     "-r, --response",
     `Monitor the status. View if your secret ${getActiveSecretStatus()} or ${getInactiveSecretStatus()}.`
-  ) // Option for response
-  .option("-report", "Get detailed reports. Receive validated secrets via email [Alpha Feature].", false) // Option to report secrets via email
-  .option("--update", "Hack the tool to the latest version."); // Option to update the tool
+  )
+  .option("-report", "Get detailed reports. Receive validated secrets via email [Alpha Feature].", false)
+  .option("--update", "Hack the tool to the latest version.");
 
-// Function to validate the secret using the specified provider and service
+/**
+ * Validate the provided secret using the given provider, service, and options.
+ * 
+ * @param {string} provider - The provider to use for validation.
+ * @param {string} service - The service to validate the secret with.
+ * @param {string} secret - The secret that needs to be validated.
+ * @param {boolean} response - Whether to get a response status for the secret.
+ * @param {boolean} report - Whether to generate a report for the validation.
+ * 
+ * @returns {Promise<void>} - A promise that resolves when validation is complete.
+ */
 export async function validate(
   provider: string,
   service: string,
   secret: string,
   response: boolean,
   report: boolean
-) {
+): Promise<void> {
   console.info("Started validating secret...");
   const result = await validatorHandleService(
     service,
@@ -78,8 +93,13 @@ export async function validate(
   console.info(result);
 }
 
-// Main function to execute the CLI program logic
-async function main() {
+/**
+ * Main function that executes the CLI program logic.
+ * Parses the command-line arguments and performs actions based on the options provided.
+ * 
+ * @returns {Promise<void>} - A promise that resolves when the program execution is complete.
+ */
+async function main(): Promise<void> {
   program.parse(process.argv); // Parse command-line arguments
 
   // Convert options keys to lowercase for consistency
@@ -89,7 +109,7 @@ async function main() {
       value,
     ]) // Normalize option keys
   );
-  
+
   // Check for the secretscope option
   if (options.secretscope) {
     try {
@@ -126,7 +146,7 @@ async function main() {
     console.info(
       `Initiating validation for service: ${
         options.service
-      } with secret: ${redactSecret(options.secret)}`
+      } with a provided secret.`
     );
     await validate(
       options.provider,
