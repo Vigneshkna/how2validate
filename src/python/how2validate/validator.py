@@ -1,8 +1,8 @@
 import argparse
 import logging
 
-from how2validate.utility.config_utility import get_active_secret_status, get_inactive_secret_status, get_package_name, get_version
-from how2validate.utility.tool_utility import format_serviceprovider, format_services, format_string, get_secretprovider, get_secretservices, redact_secret, update_tool, validate_choice
+from how2validate.utility.config_utility import get_active_secret_status, get_inactive_secret_status, get_version
+from how2validate.utility.tool_utility import format_string, get_secretprovider, get_secretscope, get_secretservices, redact_secret, update_tool, validate_choice
 from how2validate.utility.log_utility import setup_logging
 from how2validate.handler.validator_handler import validator_handle_service
 
@@ -30,18 +30,20 @@ def parse_arguments():
     services = get_secretservices()
 
     # Define arguments
+    parser.add_argument('-secretscope',  action='store_true',
+                        help='Explore the secret universe. Your next target awaits.')
     parser.add_argument('-provider',  type=lambda s: validate_choice(s, provider), required=False,
-                        help=f"Secret provider to validate secrets\nSupported providers:\n{format_serviceprovider()}")
+                        help=f"Specify your provider. Unleash your validation arsenal.")
     parser.add_argument('-service',  type=lambda s: validate_choice(s, services), required=False,
-                        help=f"Service / SecretType to validate secrets\nSupported services:\n{format_services()}")
+                        help=f"Specify your target service. Validate your secrets with precision.")
     parser.add_argument('-secret', required=False,
-                        help="Pass Secrets to be validated")
+                        help="Unveil your secrets to verify their authenticity.")
     parser.add_argument('-r', '--response', action='store_true',
-                        help=f"Prints {get_active_secret_status()}/ {get_inactive_secret_status()} upon validating secrets.")
+                        help=f"Monitor the status. View if your secret {get_active_secret_status()} or {get_inactive_secret_status()}.")
     parser.add_argument('-report', action='store_false', default=False,
-                        help=f"Reports validated secrets over E-mail")
+                        help=f"Get detailed reports. Receive validated secrets via email [Alpha Feature].")
     parser.add_argument('-v', '--version', action='version', version=f'How2Validate Tool version {get_version()}', 
-                        help='Expose the version')
+                        help='Expose the version.')
     parser.add_argument('--update', action='store_true',
                         help='Hack the tool to the latest version.')
 
@@ -65,6 +67,13 @@ def main(args=None):
             logging.info("Tool updated successfully.")
         except Exception as e:
             logging.error(f"Error during tool update: {e}")
+        return
+    
+    if args.secretscope:
+        try:
+            get_secretscope()
+        except Exception as e:
+            logging.error(f"Error fetching Scoped secret services : {e}")
         return
 
     if not args.provider or not args.service or not args.secret:
