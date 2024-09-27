@@ -82,7 +82,7 @@ def main(args=None):
         return
 
     try:
-        logging.info(f"Initiating validation for service: {args.service} with secret: {redact_secret(args.secret)}")
+        logging.info(f"Initiating validation for service: {args.service} with a provided secret.")
         result = validate(args.provider, args.service, args.secret, args.response, args.report)
         logging.info("Validation completed successfully.")
     except Exception as e:
