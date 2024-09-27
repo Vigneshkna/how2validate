@@ -1,6 +1,7 @@
 import * as fs from "fs"; // Importing the 'fs' module for file system operations
 import * as path from "path"; // Importing the 'path' module for handling file and directory paths
 import * as logging from "loglevel"; // Importing loglevel for logging messages
+import Table from 'cli-table3';
 import { execSync } from "child_process"; // Importing execSync to run shell commands synchronously
 
 import { getPackageName } from "./config_utility"; // Importing a function to get the package name from configuration
@@ -66,6 +67,39 @@ export function getSecretServices(
   }
 
   return enabledSecretsServices; // Return the list of enabled secret services
+}
+
+// Function to get and display secret providers and services
+export function getSecretscope(filePath: string = tokenManager_filePath): void {
+  // Read and parse the JSON file contents
+  const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  const table = new Table({
+    head: ['Provider', 'Service'],  // Table headers
+    style: {
+      head: ['green'],  // Header styling
+      border: ['white']  // Border styling
+    }
+  });
+
+  let hasEnabledServices = false;
+
+  // Iterate over each provider and their tokens
+  for (const provider in data) {
+    const tokens = data[provider];
+    for (const tokenInfo of tokens) {
+      if (tokenInfo.is_enabled) {
+        table.push([provider, tokenInfo['display_name']]);  // Add rows to the table
+        hasEnabledServices = true;
+      }
+    }
+  }
+
+  // Display the table or a message if no services are enabled
+  if (hasEnabledServices) {
+    console.log(table.toString());
+  } else {
+    console.log('No enabled services found.');
+  }
 }
 
 /**

@@ -10,6 +10,7 @@ import {
   formatServiceProviders,
   formatServices,
   getSecretProviders,
+  getSecretscope,
   getSecretServices,
   redactSecret,
   updateTool,
@@ -29,7 +30,7 @@ program
   .version(
     `How2Validate Tool version ${getVersion() as string}`,
     "-v, --version",
-    "Expose the version"
+    "Expose the version."
   ); // Set the version and help flag
 
 const providerChoices = getSecretProviders(); // Get supported secret providers
@@ -38,22 +39,26 @@ const serviceChoices = getSecretServices(); // Get supported secret services
 // Define CLI options using Commander
 program
   .option(
+    "-secretscope",
+    `Explore the secret universe. Your next target awaits.`
+  ) // Option for secret scope
+  .option(
     "-provider <PROVIDER>",
-    `Secret provider to validate secrets\nSupported providers:\n${formatServiceProviders()}`,
+    `Specify your provider. Unleash your validation arsenal.`,
     (value) => validateChoice(value, providerChoices)
   ) // Option for provider
   .option(
     "-service <SERVICE>",
-    `Service / SecretType to validate secrets\nSupported services:\n${formatServices()}`,
+    `Specify your target service. Validate your secrets with precision.`,
     (value) => validateChoice(value, serviceChoices)
   ) // Option for service
-  .option("-secret <SECRET>", "Pass the secret to be validated") // Option for secret
+  .option("-secret <SECRET>", "Unveil your secrets to verify their authenticity.") // Option for secret
   .option(
     "-r, --response",
-    `Prints ${getActiveSecretStatus()} / ${getInactiveSecretStatus()} upon validating secrets`
+    `Monitor the status. View if your secret ${getActiveSecretStatus()} or ${getInactiveSecretStatus()}.`
   ) // Option for response
-  .option("-report", "Reports validated secrets over E-mail", false) // Option to report secrets via email
-  .option("--update", "Hack the tool to the latest version"); // Option to update the tool
+  .option("-report", "Get detailed reports. Receive validated secrets via email [Alpha Feature].", false) // Option to report secrets via email
+  .option("--update", "Hack the tool to the latest version."); // Option to update the tool
 
 // Function to validate the secret using the specified provider and service
 export async function validate(
@@ -84,6 +89,17 @@ async function main() {
       value,
     ]) // Normalize option keys
   );
+  
+  // Check for the secretscope option
+  if (options.secretscope) {
+    try {
+      getSecretscope();
+      return; // Exit after updating
+    } catch (error) {
+      console.error(`Error fetching Scoped secret services : ${error}`); // Log any errors
+      return;
+    }
+  }
 
   // Check for the update option
   if (options.update) {

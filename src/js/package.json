@@ -1,11 +1,13 @@
 {
   "name": "how2validate",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.3",
   "description": "A CLI tool to validate secrets for different services.",
   "main": "how2validate/index.ts",
   "scripts": {
     "build": "npx tsc && npx cpx './config.ini' dist/ && npx cpx './tokenManager.json' dist/",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "publishnpm": "npm publish",
+    "publishjsr": "npx jsr publish"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
   "homepage": "https://github.com/Blackplums/how2validate#readme",
   "dependencies": {
     "axios": "^1.7.7",
+    "cli-table3": "^0.6.5",
     "commander": "^12.1.0",
     "jsr": "^0.13.2",
     "loglevel": "^1.9.2"
