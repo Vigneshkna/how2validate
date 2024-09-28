@@ -1,6 +1,6 @@
 {
   "name": "how2validate",
-  "version": "0.0.1-beta.5",
+  "version": "0.0.1-beta.6",
   "description": "A CLI tool to validate secrets for different services.",
   "main": "how2validate/index.ts",
   "scripts": {
@@ -25,6 +25,7 @@
     "url": "https://github.com/Blackplums/how2validate/issues"
   },
   "homepage": "https://github.com/Blackplums/how2validate#readme",
+  "type": "commonjs",
   "dependencies": {
     "axios": "^1.7.7",
     "cli-table3": "^0.6.5",

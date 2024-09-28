@@ -50,12 +50,12 @@ program
   .option(
     "-provider <PROVIDER>",
     `Specify your provider. Unleash your validation arsenal.`,
-    (value) => validateChoice(value, providerChoices)
+    (value: string) => validateChoice(value, providerChoices)
   )
   .option(
     "-service <SERVICE>",
     `Specify your target service. Validate your secrets with precision.`,
-    (value) => validateChoice(value, serviceChoices)
+    (value: string) => validateChoice(value, serviceChoices)
   )
   .option("-secret <SECRET>", "Unveil your secrets to verify their authenticity.")
   .option(
@@ -67,13 +67,13 @@ program
 
 /**
  * Validate the provided secret using the given provider, service, and options.
- * 
+ *
  * @param {string} provider - The provider to use for validation.
  * @param {string} service - The service to validate the secret with.
  * @param {string} secret - The secret that needs to be validated.
  * @param {boolean} response - Whether to get a response status for the secret.
  * @param {boolean} report - Whether to generate a report for the validation.
- * 
+ *
  * @returns {Promise<void>} - A promise that resolves when validation is complete.
  */
 export async function validate(
@@ -96,7 +96,7 @@ export async function validate(
 /**
  * Main function that executes the CLI program logic.
  * Parses the command-line arguments and performs actions based on the options provided.
- * 
+ *
  * @returns {Promise<void>} - A promise that resolves when the program execution is complete.
  */
 async function main(): Promise<void> {
@@ -116,7 +116,7 @@ async function main(): Promise<void> {
       getSecretscope();
       return; // Exit after updating
     } catch (error) {
-      console.error(`Error fetching Scoped secret services : ${error}`); // Log any errors
+      console.error(`Error fetching Scoped secret services: ${error}`); // Log any errors
       return;
     }
   }
@@ -144,9 +144,7 @@ async function main(): Promise<void> {
   // Attempt to validate the secret
   try {
     console.info(
-      `Initiating validation for service: ${
-        options.service
-      } with a provided secret.`
+      `Initiating validation for service: ${options.service} with a provided secret.`
     );
     await validate(
       options.provider,
