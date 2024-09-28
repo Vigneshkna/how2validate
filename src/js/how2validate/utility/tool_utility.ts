@@ -1,30 +1,28 @@
 import * as fs from "fs"; // Importing the 'fs' module for file system operations
 import * as path from "path"; // Importing the 'path' module for handling file and directory paths
+import { fileURLToPath } from 'url'; // Importing fileURLToPath to convert URL to path
 import * as logging from "loglevel"; // Importing loglevel for logging messages
-import Table from 'cli-table3';
+import Table from 'cli-table3'; // Importing cli-table3 for formatted table display
 import { execSync } from "child_process"; // Importing execSync to run shell commands synchronously
 
-import { getPackageName } from "./config_utility"; // Importing a function to get the package name from configuration
-import { setupLogging } from "./log_utility"; // Importing the function to set up logging
+import { getPackageName } from "./config_utility.js"; // Importing a function to get the package name from configuration
 
-// Call the logging setup function to initialize logging configuration
-setupLogging();
-
-// Get the directory of the current file
-const currentDir = __dirname;
+// Get the directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Define the path to the TokenManager JSON file
 const tokenManager_filePath = path.join(
-  currentDir,
+  __dirname,
   "..",
   "..",
   "tokenManager.json"
 );
 
 /**
- * Get the secret providers from the TokenManager JSON file.
- * @param filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
- * @returns An array of enabled secret providers.
+ * Get the enabled secret providers from the TokenManager JSON file.
+ * @param {string} filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
+ * @returns {string[]} An array of enabled secret providers.
  */
 export function getSecretProviders(
   filePath: string = tokenManager_filePath
@@ -47,18 +45,29 @@ export function getSecretProviders(
 }
 
 /**
- * Get the secret services from the TokenManager JSON file.
- * @param filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
- * @returns An array of enabled secret services.
+ * Get the enabled secret services from the TokenManager JSON file.
+ * @param {string} filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
+ * @returns {string[]} An array of enabled secret services.
  */
 export function getSecretServices(
-  filePath: string = tokenManager_filePath
+  filePath: string = tokenManager_filePath,
+  provider: string = ""
 ): string[] {
+  // Read the JSON file and parse its contents
   const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const enabledSecretsServices: string[] = [];
+  provider = formatString(provider)
 
-  for (const provider in data) {
-    const tokens = data[provider];
+  // Iterate through each provider in the data
+  for (const currentProvider in data) {
+    const formatterProvider = formatString(currentProvider)
+    // If a specific provider is provided, check for a match
+    if (provider && provider !== formatterProvider) {
+      continue; // Skip to the next provider if there's no match
+    }
+
+    const tokens = data[currentProvider];
+    // Check each token's enabled status
     for (const tokenInfo of tokens) {
       if (tokenInfo.is_enabled) {
         enabledSecretsServices.push(tokenInfo.display_name); // Add display name of enabled services
@@ -69,7 +78,10 @@ export function getSecretServices(
   return enabledSecretsServices; // Return the list of enabled secret services
 }
 
-// Function to get and display secret providers and services
+/**
+ * Get and display secret providers and services from the TokenManager JSON file.
+ * @param {string} filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
+ */
 export function getSecretscope(filePath: string = tokenManager_filePath): void {
   // Read and parse the JSON file contents
   const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
@@ -104,17 +116,20 @@ export function getSecretscope(filePath: string = tokenManager_filePath): void {
 
 /**
  * Format the enabled service providers for display.
- * @param filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
- * @returns A formatted string of enabled service providers.
+ * @param {string} filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
+ * @returns {string} A formatted string of enabled service providers.
  */
 export function formatServiceProviders(
   filePath: string = tokenManager_filePath
 ): string {
+  // Read the JSON file and parse its contents
   const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const enabledSecretsServices: string[] = [];
 
+  // Iterate through each provider in the data
   for (const provider in data) {
     const tokens = data[provider];
+    // Check each token's enabled status
     for (const tokenInfo of tokens) {
       if (tokenInfo.is_enabled) {
         enabledSecretsServices.push(provider); // Add enabled provider to the list
@@ -128,17 +143,20 @@ export function formatServiceProviders(
 
 /**
  * Format the enabled services for display.
- * @param filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
- * @returns A formatted string of enabled services with their providers.
+ * @param {string} filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
+ * @returns {string} A formatted string of enabled services with their providers.
  */
 export function formatServices(
   filePath: string = tokenManager_filePath
 ): string {
+  // Read the JSON file and parse its contents
   const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const enabledSecretsServices: string[] = [];
 
+  // Iterate through each provider in the data
   for (const provider in data) {
     const tokens = data[provider];
+    // Check each token's enabled status
     for (const tokenInfo of tokens) {
       if (tokenInfo.is_enabled) {
         // Add formatted string of provider and service display name
@@ -153,9 +171,9 @@ export function formatServices(
 
 /**
  * Format a string by converting it to lowercase and replacing spaces with underscores.
- * @param inputString - The string to format.
- * @returns The formatted string.
- * @throws An error if the input is not a string.
+ * @param {string} inputString - The string to format.
+ * @returns {string} The formatted string.
+ * @throws {Error} An error if the input is not a string.
  */
 export function formatString(inputString: string): string {
   if (typeof inputString !== "string") {
@@ -167,10 +185,10 @@ export function formatString(inputString: string): string {
 
 /**
  * Validate a user's choice against a list of valid choices.
- * @param value - The value to validate.
- * @param validChoices - An array of valid choices.
- * @returns The formatted value if valid.
- * @throws An error if the value is not valid.
+ * @param {string} value - The value to validate.
+ * @param {string[]} validChoices - An array of valid choices.
+ * @returns {string} The formatted value if valid.
+ * @throws {Error} An error if the value is not valid.
  */
 export function validateChoice(value: string, validChoices: string[]): string {
   const formattedValue = formatString(value); // Format the user's choice
@@ -188,9 +206,9 @@ export function validateChoice(value: string, validChoices: string[]): string {
 
 /**
  * Redact a secret by masking part of it with asterisks.
- * @param secret - The secret to redact.
- * @returns The redacted secret.
- * @throws An error if the input is not a string.
+ * @param {string} secret - The secret to redact.
+ * @returns {string} The redacted secret.
+ * @throws {Error} An error if the input is not a string.
  */
 export function redactSecret(secret: string): string {
   if (typeof secret !== "string") {
@@ -231,41 +249,27 @@ export function updateTool(): void {
         execSync(`bun add ${packageName} --global`, { stdio: "inherit" });
         break;
       default:
-        console.error(
-          "Unsupported package manager. Please install the tool manually."
-        );
-        return; // Exit if the package manager is not recognized
+        logging.warn("Unknown package manager. Please update manually."); // Log warning for unknown package manager
     }
-    console.log("Tool updated to the latest version."); // Log success message
   } catch (error) {
-    console.error(`Failed to update the tool: ${error}`); // Log error message if the update fails
+    logging.error(`Failed to update the tool: ${error}`); // Log error message if update fails
   }
 }
 
 /**
- * Detect the package manager installed on the system.
- * @returns The name of the package manager (npm, yarn, pnpm, bun, or unknown).
+ * Detect the package manager being used in the project.
+ * @returns {string} The name of the detected package manager.
  */
 function detectPackageManager(): string {
-  try {
-    execSync("npm --version", { stdio: "ignore" }); // Check for npm
-    return "npm";
-  } catch {
-    try {
-      execSync("yarn --version", { stdio: "ignore" }); // Check for yarn
-      return "yarn";
-    } catch {
-      try {
-        execSync("pnpm --version", { stdio: "ignore" }); // Check for pnpm
-        return "pnpm";
-      } catch {
-        try {
-          execSync("bun --version", { stdio: "ignore" }); // Check for bun
-          return "bun";
-        } catch {
-          return "unknown"; // Return 'unknown' if no recognized package manager is found
-        }
-      }
-    }
-  }
+  const hasNpm = fs.existsSync(path.join(__dirname, "..", "node_modules")); // Check for npm
+  const hasYarn = fs.existsSync(path.join(__dirname, "..", "yarn.lock")); // Check for yarn
+  const hasPnpm = fs.existsSync(path.join(__dirname, "..", "pnpm-lock.yaml")); // Check for pnpm
+  const hasBun = fs.existsSync(path.join(__dirname, "..", "bun.lockb")); // Check for bun
+
+  if (hasBun) return "bun"; // Return bun if found
+  if (hasPnpm) return "pnpm"; // Return pnpm if found
+  if (hasYarn) return "yarn"; // Return yarn if found
+  if (hasNpm) return "npm"; // Return npm if found
+
+  return "unknown"; // Return unknown if none found
 }

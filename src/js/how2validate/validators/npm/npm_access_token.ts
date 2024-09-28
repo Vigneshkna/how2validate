@@ -1,19 +1,32 @@
+/**
+ * @module NPM Access Token Validator
+ * @description
+ * This module provides functionality to validate NPM Access Token by interacting with the NPM API.
+ * It checks the validity of the provided token and returns appropriate status messages based on the response.
+ * 
+ * @requires axios
+ * @requires ../../utility/config_utility.js
+ * @requires ../../utility/log_utility.js
+ */
+
 import axios, { AxiosError } from "axios"; // Import Axios for making HTTP requests and the AxiosError type for error handling
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-} from "../../utility/config_utility"; // Import functions to retrieve active and inactive secret statuses
-import { getSecretStatusMessage } from "../../utility/log_utility"; // Import function to format status messages
+} from "../../utility/config_utility.js"; // Import functions to retrieve active and inactive secret statuses
+import { getSecretStatusMessage } from "../../utility/log_utility.js"; // Import function to format status messages
 
 /**
  * Validate an NPM access token by making an API request to check its validity.
+ *
+ * @module npm_access_token
  * 
  * @param {string} service - The name of the service being validated (in this case, NPM).
  * @param {string} secret - The NPM access token to validate.
  * @param {boolean} response - A flag to indicate whether to include detailed response data.
  * @param {boolean} [report] - An optional flag for additional reporting features.
  * 
- * @returns {Promise<string>} - A promise that resolves to a status message about the access token validation.
+ * @returns {Promise<string>} A promise that resolves to a status message about the access token validation.
  */
 export async function validateNpmAccessToken(
   service: string,
@@ -62,10 +75,12 @@ export async function validateNpmAccessToken(
   }
 }
 
+
 /**
- * Handle the case when the NPM access token is inactive or invalid.
+ * Handle the case when the token is inactive or invalid.
  * 
- * @param {string} service - The name of the service being validated (NPM).
+ * @function handleInactiveStatus
+ * @param {string} service - The name of the service being validated.
  * @param {boolean} response - A flag to indicate whether to include detailed response data.
  * @param {any} [data] - Optional additional data to include in the response.
  * 
@@ -97,11 +112,12 @@ function handleInactiveStatus(
 /**
  * Handle errors that occur during the validation process.
  * 
- * @param {unknown} error - The error object that was thrown during the request.
- * @param {string} service - The name of the service being validated (NPM).
+ * @function handleErrors
+ * @param {unknown} error - The error object that was thrown.
+ * @param {string} service - The name of the service being validated.
  * @param {boolean} response - A flag to indicate whether to include detailed response data.
  * 
- * @returns {string} - A formatted status message based on the type of error encountered.
+ * @returns {string} - A formatted status message based on the type of error.
  */
 function handleErrors(
   error: unknown,

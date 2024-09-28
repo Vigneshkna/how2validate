@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2021", // Specifies the JavaScript version to compile to. ES6 (also known as ES2015) is a widely supported version.
-    "module": "commonjs", // Defines the module system to use. CommonJS is the standard for Node.js modules.
+    "module": "ESNext", // Defines the module system to use. CommonJS is the standard for Node.js modules.
+    "lib": ["ESNext"],
     "outDir": "./dist", // The output directory where compiled JavaScript files will be placed.
     "rootDir": "./how2validate", // The root directory of your TypeScript source files; all files under this directory will be included in the compilation.
     "strict": true, // Enables all strict type-checking options for more rigorous checks.

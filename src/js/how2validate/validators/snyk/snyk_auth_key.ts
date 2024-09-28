@@ -1,19 +1,33 @@
-import axios from "axios"; // Import Axios for making HTTP requests
+/**
+ * @module Snyk Auth Key Validator
+ * @description
+ * This module provides functionality to validate Snyk Auth Key by interacting with the Snyk API.
+ * It checks the validity of the provided token and returns appropriate status messages based on the response.
+ * 
+ * @requires axios
+ * @requires ../../utility/config_utility.js
+ * @requires ../../utility/log_utility.js
+ */
+
+import axios, { AxiosError } from "axios"; // Import Axios for making HTTP requests and AxiosError for error handling
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-} from "../../utility/config_utility"; // Import functions to get secret statuses
-import { getSecretStatusMessage } from "../../utility/log_utility"; // Import function to format status messages
+} from "../../utility/config_utility.js"; // Import functions to get secret statuses
+import { getSecretStatusMessage } from "../../utility/log_utility.js"; // Import function to format status messages
 
 /**
- * Validate a Snyk authentication key by making an API request to check its validity.
+ * Validate a Snyk auth key by making an API request to check its validity.
  * 
+ * @async
+ * @function validateSnykAuthKey
  * @param {string} service - The name of the service being validated.
- * @param {string} secret - The Snyk API key (token) to validate.
+ * @param {string} secret - The token or secret to validate.
  * @param {boolean} response - A flag to indicate whether to include detailed response data.
  * @param {boolean} [report] - An optional flag for additional reporting features.
  * 
- * @returns {Promise<string>} - A promise that resolves to a status message about the authentication key validation.
+ * @returns {Promise<string>} - A promise that resolves to a status message about the token validation.
+ * @throws {Error} - Throws an error if the validation process encounters an unexpected issue.
  */
 export async function validateSnykAuthKey(
   service: string,
@@ -23,20 +37,18 @@ export async function validateSnykAuthKey(
 ): Promise<string> {
   // Snyk API endpoint for retrieving user information
   const url = "https://snyk.io/api/v1/user";
-
-  // Headers to prevent caching and authorize the request using the provided API key (token)
-  const headers = {
-    "Cache-Control": "no-cache",
-    Authorization: `token ${secret}`, // Authorization header with the Snyk token
-  };
-
+  const nocacheHeaders = { "Cache-Control": "no-cache" }; // Header to prevent caching
+  const headers = { Authorization: `token ${secret}` }; // Authorization header with the Snyk token
+  
   try {
-    // Send a GET request to the Snyk API to validate the token
-    const responseData = await axios.get(url, { headers });
+    // Make the API request to validate the token
+    const responseData = await axios.get(url, {
+      headers: { ...nocacheHeaders, ...headers }, // Combine headers
+    });
 
-    // Check if the request was successful (HTTP 200)
+    // Check if the request was successful
     if (responseData.status === 200) {
-      // If no detailed response is requested, return the active status message
+      // If successful and no detailed response is requested
       if (!response) {
         return getSecretStatusMessage(
           service,
@@ -44,7 +56,7 @@ export async function validateSnykAuthKey(
           response
         );
       } else {
-        // Return the active status message along with the response data
+        // If successful and detailed response is requested
         return getSecretStatusMessage(
           service,
           getActiveSecretStatus() as string,
@@ -53,43 +65,42 @@ export async function validateSnykAuthKey(
         );
       }
     } else {
-      // If the response status code is not 200, handle it as an inactive key
-      return handleInactiveResponse(service, response, responseData.data);
+      // Handle non-successful status codes
+      return handleInactiveStatus(service, response, responseData.data);
     }
   } catch (error) {
-    // Handle errors that occur during the request and return the inactive status message
-    return handleError(service, response, error);
+    // Handle errors that occur during the request
+    return handleErrors(error, service, response);
   }
 }
 
 /**
- * Handle the case when the authentication key is inactive or invalid.
+ * Handle the case when the token is inactive or invalid.
  * 
+ * @function handleInactiveStatus
  * @param {string} service - The name of the service being validated.
  * @param {boolean} response - A flag to indicate whether to include detailed response data.
- * @param {any} [responseData] - Optional additional data to include in the response.
+ * @param {any} [data] - Optional additional data to include in the response.
  * 
  * @returns {string} - A formatted status message indicating the inactive status.
  */
-function handleInactiveResponse(
+function handleInactiveStatus(
   service: string,
   response: boolean,
-  responseData: any
+  data?: any
 ): string {
   if (!response) {
-    // Return inactive status message without additional data
     return getSecretStatusMessage(
       service,
       getInactiveSecretStatus() as string,
       response
     );
   } else {
-    // Return inactive status message with additional response data
     return getSecretStatusMessage(
       service,
       getInactiveSecretStatus() as string,
       response,
-      responseData
+      data ? JSON.stringify(data) : "No additional data."
     );
   }
 }
@@ -97,24 +108,50 @@ function handleInactiveResponse(
 /**
  * Handle errors that occur during the validation process.
  * 
+ * @function handleErrors
+ * @param {unknown} error - The error object that was thrown.
  * @param {string} service - The name of the service being validated.
  * @param {boolean} response - A flag to indicate whether to include detailed response data.
- * @param {any} error - The error object that was thrown.
  * 
- * @returns {string} - A formatted status message based on the type of error encountered.
+ * @returns {string} - A formatted status message based on the type of error.
  */
-function handleError(service: string, response: boolean, error: any): string {
-  let errorMessage = "";
-
-  // Check if the error is an Axios error
+function handleErrors(
+  error: unknown,
+  service: string,
+  response: boolean
+): string {
   if (axios.isAxiosError(error)) {
-    // Extract the error message or response data
-    errorMessage = error.response ? error.response.data : error.message;
-  } else {
-    // Handle general errors that are not Axios errors
-    errorMessage = error.message;
+    const axiosError = error as AxiosError; // Cast error to AxiosError for more specific handling
+    if (!response) {
+      return getSecretStatusMessage(
+        service,
+        getInactiveSecretStatus() as string,
+        response
+      );
+    } else {
+      // Include detailed error information in the response
+      return getSecretStatusMessage(
+        service,
+        getInactiveSecretStatus() as string,
+        response,
+        axiosError.response?.data || axiosError.message
+      );
+    }
   }
 
-  // Return inactive response handling with the error message
-  return handleInactiveResponse(service, response, errorMessage);
+  // Handle general errors that are not Axios errors
+  if (!response) {
+    return getSecretStatusMessage(
+      service,
+      getInactiveSecretStatus() as string,
+      response
+    );
+  } else {
+    return getSecretStatusMessage(
+      service,
+      getInactiveSecretStatus() as string,
+      response,
+      "An unexpected error occurred."
+    );
+  }
 }
