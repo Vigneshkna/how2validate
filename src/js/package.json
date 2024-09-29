@@ -1,14 +1,13 @@
 {
   "name": "how2validate",
-  "version": "0.0.1-beta.14",
-  "private": true,
+  "version": "0.0.1-beta.15",
   "description": "A CLI tool to validate secrets for different services.",
   "main": "how2validate/index.ts",
   "type": "module",
   "scripts": {
     "build": "npm link && npx tsc && npx cpx './config.ini' dist/ && npx cpx './tokenManager.json' dist/",
     "start": "node dist/index.js",
-    "publishnpm": "npm publish --access=restricted",
+    "publishnpm": "npm publish",
     "publishjsr": "npx jsr publish --allow-dirty"
   },
   "repository": {
