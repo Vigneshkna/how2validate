@@ -1,11 +1,10 @@
 import * as fs from "fs"; // Importing the 'fs' module for file system operations
 import * as path from "path"; // Importing the 'path' module for handling file and directory paths
 import { fileURLToPath } from 'url'; // Importing fileURLToPath to convert URL to path
-import * as logging from "loglevel"; // Importing loglevel for logging messages
+// import * as logging from "loglevel"; // Importing loglevel for logging messages
 import Table from 'cli-table3'; // Importing cli-table3 for formatted table display
-// import { execSync } from "child_process"; // Importing execSync to run shell commands synchronously
 
-import { getPackageName } from "./config_utility.js"; // Importing a function to get the package name from configuration
+// import { getPackageName } from "./config_utility.js"; // Importing a function to get the package name from configuration
 
 // Convert import.meta.url to __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -226,9 +225,9 @@ export function redactSecret(secret: string): string {
   return secret.slice(0, 5) + "*".repeat(secret.length - 5);
 }
 
-/**
- * Update the tool to the latest version using the appropriate package manager.
- */
+// /**
+//  * Update the tool to the latest version using the appropriate package manager.
+//  */
 // export function updateTool(): void {
 //   logging.info("Updating the tool..."); // Log the update initiation
 
@@ -259,20 +258,20 @@ export function redactSecret(secret: string): string {
 //   }
 // }
 
-/**
- * Detect the package manager being used in the project.
- * @returns {string} The name of the detected package manager.
- */
-function detectPackageManager(): string {
-  const hasNpm = fs.existsSync(path.join(__dirname, "..", "node_modules")); // Check for npm
-  const hasYarn = fs.existsSync(path.join(__dirname, "..", "yarn.lock")); // Check for yarn
-  const hasPnpm = fs.existsSync(path.join(__dirname, "..", "pnpm-lock.yaml")); // Check for pnpm
-  const hasBun = fs.existsSync(path.join(__dirname, "..", "bun.lockb")); // Check for bun
+// /**
+//  * Detect the package manager being used in the project.
+//  * @returns {string} The name of the detected package manager.
+//  */
+// function detectPackageManager(): string {
+//   const hasNpm = fs.existsSync(path.join(__dirname, "..", "node_modules")); // Check for npm
+//   const hasYarn = fs.existsSync(path.join(__dirname, "..", "yarn.lock")); // Check for yarn
+//   const hasPnpm = fs.existsSync(path.join(__dirname, "..", "pnpm-lock.yaml")); // Check for pnpm
+//   const hasBun = fs.existsSync(path.join(__dirname, "..", "bun.lockb")); // Check for bun
 
-  if (hasBun) return "bun"; // Return bun if found
-  if (hasPnpm) return "pnpm"; // Return pnpm if found
-  if (hasYarn) return "yarn"; // Return yarn if found
-  if (hasNpm) return "npm"; // Return npm if found
+//   if (hasBun) return "bun"; // Return bun if found
+//   if (hasPnpm) return "pnpm"; // Return pnpm if found
+//   if (hasYarn) return "yarn"; // Return yarn if found
+//   if (hasNpm) return "npm"; // Return npm if found
 
-  return "unknown"; // Return unknown if none found
-}
+//   return "unknown"; // Return unknown if none found
+// }

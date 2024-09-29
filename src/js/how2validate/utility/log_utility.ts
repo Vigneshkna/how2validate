@@ -2,7 +2,7 @@
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-} from "./config_utility.js";
+} from "./config_utility";
 
 /**
  * Generates a formatted message about the status of a secret.

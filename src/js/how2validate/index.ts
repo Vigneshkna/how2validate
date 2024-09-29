@@ -1,31 +1,17 @@
-// index.ts
-
-/**
- * @module How2Validate Tool
- * @description
- * A Command-Line Interface (CLI) tool designed to validate various types of secrets across different services.
- * It leverages multiple secret providers and services to ensure the authenticity and status of secrets.
- * 
- * @requires commander
- * @requires ./utility/config_utility.js
- * @requires ./utility/tool_utility.js
- * @requires ./handler/validator_handler.js
- */
-
 import { Command } from "commander"; // Importing Commander for building CLI applications
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
   getVersion,
-} from "./utility/config_utility.js"; // Importing configuration utility functions
+} from "./utility/config_utility"; // Importing configuration utility functions
 import {
   formatString,
   getSecretProviders,
   getSecretscope,
   getSecretServices,
   validateChoice,
-} from "./utility/tool_utility.js"; // Importing utility functions for secret validation
-import { validatorHandleService } from "./handler/validator_handler.js"; // Importing the validation handler
+} from "./utility/tool_utility"; // Importing utility functions for secret validation
+import { validatorHandleService } from "./handler/validator_handler"; // Importing the validation handler
 import { fileURLToPath } from "url";
 
 /**
@@ -165,7 +151,7 @@ async function main(): Promise<void> {
       getSecretscope();
       return; // Exit after processing
     } catch (error) {
-      console.error(`Error fetching Scoped secret services: ${error}`); // Log any errors
+      console.error(`Error fetching Scoped secret services: ${error}`);
       return;
     }
   }
@@ -186,7 +172,7 @@ async function main(): Promise<void> {
   // Validate required arguments
   if (!options.provider || !options.service || !options.secret) {
     console.error("Missing required arguments: -provider, -service, -secret");
-    console.error("Use '-h' or '--help' for tool usage information."); // Provide help info
+    console.error("Use '-h' or '--help' for tool usage information.");
     return;
   }
 
@@ -212,7 +198,6 @@ async function main(): Promise<void> {
 /**
  * Execute the main function only if the script is run directly from the command line.
  */
-// ES module check for direct execution
 const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 if (isMain) {
   main().catch((error) => console.error(`Unexpected error: ${error}`));

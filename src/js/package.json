@@ -1,11 +1,11 @@
 {
   "name": "how2validate",
-  "version": "0.0.1-beta.17",
+  "version": "0.0.1-beta.20",
   "description": "A CLI tool to validate secrets for different services.",
-  "main": "how2validate/index.ts",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "npm link && npx tsc && npx cpx './config.ini' dist/ && npx cpx './tokenManager.json' dist/",
+    "build": "npm link && npx tsc && npx webpack --config webpack.config.cjs && npx cpx './config.ini' dist/ && npx cpx './tokenManager.json' dist/",
     "start": "node dist/index.js",
     "publishnpm": "npm publish",
     "publishjsr": "npx jsr publish --allow-dirty"
@@ -42,8 +42,13 @@
     "@types/ini": "^4.1.1",
     "@types/node": "^22.5.5",
     "cpx": "^1.2.1",
+    "node-polyfill-webpack-plugin": "^4.0.0",
     "semantic-release": "^24.1.1",
-    "typescript": "^5.7.0-dev.20240928"
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.0-dev.20240928",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
   },
   "files": [
     "how2validate/*",
