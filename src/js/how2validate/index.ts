@@ -1,3 +1,5 @@
+// index.ts
+
 /**
  * @module How2Validate Tool
  * @description
@@ -21,10 +23,10 @@ import {
   getSecretProviders,
   getSecretscope,
   getSecretServices,
-  updateTool,
   validateChoice,
 } from "./utility/tool_utility.js"; // Importing utility functions for secret validation
 import { validatorHandleService } from "./handler/validator_handler.js"; // Importing the validation handler
+import { fileURLToPath } from "url";
 
 /**
  * Creates a new instance of the Commander program to build the CLI application.
@@ -88,16 +90,24 @@ program
     `Monitor the status. View if your secret ${getActiveSecretStatus()} or ${getInactiveSecretStatus()}.`
   )
   .option("-report", "Get detailed reports. Receive validated secrets via email [Alpha Feature].", false)
-  .option("--update", "Hack the tool to the latest version.");
+  // .option("--update", "Hack the tool to the latest version.");
 
+/**
+ * Get the list of available providers.
+ * @returns {string[]} Array of provider names.
+ */
 export function getProvider(): string[] {
-  return providerChoices
+  return providerChoices;
 }
 
-export function getService(provider:string): string[] {
-  return getSecretServices(undefined,provider)
+/**
+ * Get the list of available services for a given provider.
+ * @param {string} provider - The provider to get services for.
+ * @returns {string[]} Array of service names.
+ */
+export function getService(provider: string): string[] {
+  return getSecretServices(undefined, provider);
 }
-
 
 /**
  * Validate the provided secret using the given provider, service, and options.
@@ -153,25 +163,25 @@ async function main(): Promise<void> {
   if (options.secretscope) {
     try {
       getSecretscope();
-      return; // Exit after updating
+      return; // Exit after processing
     } catch (error) {
       console.error(`Error fetching Scoped secret services: ${error}`); // Log any errors
       return;
     }
   }
 
-  // Check for the update option
-  if (options.update) {
-    try {
-      console.info("Initiating tool update...");
-      await updateTool(); // Call the update function
-      console.info("Tool updated successfully.");
-      return; // Exit after updating
-    } catch (error) {
-      console.error(`Error during tool update: ${error}`); // Log any errors
-      return;
-    }
-  }
+  // // Check for the update option
+  // if (options.update) {
+  //   try {
+  //     console.info("Initiating tool update...");
+  //     await updateTool(); // Call the update function
+  //     console.info("Tool updated successfully.");
+  //     return; // Exit after updating
+  //   } catch (error) {
+  //     console.error(`Error during tool update: ${error}`); // Log any errors
+  //     return;
+  //   }
+  // }
 
   // Validate required arguments
   if (!options.provider || !options.service || !options.secret) {
@@ -200,6 +210,10 @@ async function main(): Promise<void> {
 }
 
 /**
- * Execute the main function and handle any unexpected errors.
+ * Execute the main function only if the script is run directly from the command line.
  */
-main().catch((error) => console.error(`Unexpected error: ${error}`));
+// ES module check for direct execution
+const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+if (isMain) {
+  main().catch((error) => console.error(`Unexpected error: ${error}`));
+}

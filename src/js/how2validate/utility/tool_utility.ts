@@ -3,11 +3,11 @@ import * as path from "path"; // Importing the 'path' module for handling file a
 import { fileURLToPath } from 'url'; // Importing fileURLToPath to convert URL to path
 import * as logging from "loglevel"; // Importing loglevel for logging messages
 import Table from 'cli-table3'; // Importing cli-table3 for formatted table display
-import { execSync } from "child_process"; // Importing execSync to run shell commands synchronously
+// import { execSync } from "child_process"; // Importing execSync to run shell commands synchronously
 
 import { getPackageName } from "./config_utility.js"; // Importing a function to get the package name from configuration
 
-// Get the directory name
+// Convert import.meta.url to __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -47,6 +47,7 @@ export function getSecretProviders(
 /**
  * Get the enabled secret services from the TokenManager JSON file.
  * @param {string} filePath - The path to the TokenManager JSON file (default: tokenManager_filePath).
+ * @param {string} provider - The provider to filter services by (default: "").
  * @returns {string[]} An array of enabled secret services.
  */
 export function getSecretServices(
@@ -56,13 +57,15 @@ export function getSecretServices(
   // Read the JSON file and parse its contents
   const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const enabledSecretsServices: string[] = [];
-  provider = formatString(provider)
+
+  // Format the provider string for case-insensitive comparison
+  const formattedProvider = formatString(provider);
 
   // Iterate through each provider in the data
   for (const currentProvider in data) {
-    const formatterProvider = formatString(currentProvider)
+    const formattedCurrentProvider = formatString(currentProvider);
     // If a specific provider is provided, check for a match
-    if (provider && provider !== formatterProvider) {
+    if (formattedProvider && formattedProvider !== formattedCurrentProvider) {
       continue; // Skip to the next provider if there's no match
     }
 
@@ -226,35 +229,35 @@ export function redactSecret(secret: string): string {
 /**
  * Update the tool to the latest version using the appropriate package manager.
  */
-export function updateTool(): void {
-  logging.info("Updating the tool..."); // Log the update initiation
+// export function updateTool(): void {
+//   logging.info("Updating the tool..."); // Log the update initiation
 
-  // Determine the package manager being used
-  const packageManager = detectPackageManager();
-  const packageName = getPackageName(); // Get the package name
+//   // Determine the package manager being used
+//   const packageManager = detectPackageManager();
+//   const packageName = getPackageName(); // Get the package name
 
-  try {
-    // Execute the appropriate command based on the package manager
-    switch (packageManager) {
-      case "npm":
-        execSync(`npm install --global ${packageName}`, { stdio: "inherit" });
-        break;
-      case "yarn":
-        execSync(`yarn global add ${packageName}`, { stdio: "inherit" });
-        break;
-      case "pnpm":
-        execSync(`pnpm add --global ${packageName}`, { stdio: "inherit" });
-        break;
-      case "bun":
-        execSync(`bun add ${packageName} --global`, { stdio: "inherit" });
-        break;
-      default:
-        logging.warn("Unknown package manager. Please update manually."); // Log warning for unknown package manager
-    }
-  } catch (error) {
-    logging.error(`Failed to update the tool: ${error}`); // Log error message if update fails
-  }
-}
+//   try {
+//     // Execute the appropriate command based on the package manager
+//     switch (packageManager) {
+//       case "npm":
+//         execSync(`npm install --global ${packageName}`, { stdio: "inherit" });
+//         break;
+//       case "yarn":
+//         execSync(`yarn global add ${packageName}`, { stdio: "inherit" });
+//         break;
+//       case "pnpm":
+//         execSync(`pnpm add --global ${packageName}`, { stdio: "inherit" });
+//         break;
+//       case "bun":
+//         execSync(`bun add ${packageName} --global`, { stdio: "inherit" });
+//         break;
+//       default:
+//         logging.warn("Unknown package manager. Please update manually."); // Log warning for unknown package manager
+//     }
+//   } catch (error) {
+//     logging.error(`Failed to update the tool: ${error}`); // Log error message if update fails
+//   }
+// }
 
 /**
  * Detect the package manager being used in the project.
