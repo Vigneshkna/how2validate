@@ -1,17 +1,33 @@
+/**
+ * @module SonarCloud Token Validator
+ * @description
+ * This module provides functionality to validate SonarCloud tokens by interacting with the SonarCloud API.
+ * It checks the validity of the provided token and returns appropriate status messages based on the response.
+ * 
+ * @requires axios
+ * @requires ../../utility/config_utility.js
+ * @requires ../../utility/log_utility.js
+ */
+
 import axios, { AxiosError } from "axios"; // Import Axios for making HTTP requests and AxiosError for error handling
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-} from "../../utility/config_utility"; // Import functions to get secret statuses
-import { getSecretStatusMessage } from "../../utility/log_utility"; // Import function to format status messages
+} from "../../utility/config_utility.js"; // Import functions to get secret statuses
+import { getSecretStatusMessage } from "../../utility/log_utility.js"; // Import function to format status messages
 
 /**
  * Validate a SonarCloud token by making an API request to check its validity.
- * @param service - The name of the service being validated.
- * @param secret - The token or secret to validate.
- * @param response - A flag to indicate whether to include detailed response data.
- * @param report - An optional flag for additional reporting features.
- * @returns A promise that resolves to a status message about the token validation.
+ * 
+ * @async
+ * @function validateSonarcloudToken
+ * @param {string} service - The name of the service being validated.
+ * @param {string} secret - The token or secret to validate.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {boolean} [report] - An optional flag for additional reporting features.
+ * 
+ * @returns {Promise<string>} - A promise that resolves to a status message about the token validation.
+ * @throws {Error} - Throws an error if the validation process encounters an unexpected issue.
  */
 export async function validateSonarcloudToken(
   service: string,
@@ -59,10 +75,13 @@ export async function validateSonarcloudToken(
 
 /**
  * Handle the case when the token is inactive or invalid.
- * @param service - The name of the service being validated.
- * @param response - A flag to indicate whether to include detailed response data.
- * @param data - Optional additional data to include in the response.
- * @returns A formatted status message indicating the inactive status.
+ * 
+ * @function handleInactiveStatus
+ * @param {string} service - The name of the service being validated.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {any} [data] - Optional additional data to include in the response.
+ * 
+ * @returns {string} - A formatted status message indicating the inactive status.
  */
 function handleInactiveStatus(
   service: string,
@@ -87,10 +106,13 @@ function handleInactiveStatus(
 
 /**
  * Handle errors that occur during the validation process.
- * @param error - The error object that was thrown.
- * @param service - The name of the service being validated.
- * @param response - A flag to indicate whether to include detailed response data.
- * @returns A formatted status message based on the type of error.
+ * 
+ * @function handleErrors
+ * @param {unknown} error - The error object that was thrown.
+ * @param {string} service - The name of the service being validated.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * 
+ * @returns {string} - A formatted status message based on the type of error.
  */
 function handleErrors(
   error: unknown,

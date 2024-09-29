@@ -1,17 +1,32 @@
+/**
+ * @module NPM Access Token Validator
+ * @description
+ * This module provides functionality to validate NPM Access Token by interacting with the NPM API.
+ * It checks the validity of the provided token and returns appropriate status messages based on the response.
+ * 
+ * @requires axios
+ * @requires ../../utility/config_utility.js
+ * @requires ../../utility/log_utility.js
+ */
+
 import axios, { AxiosError } from "axios"; // Import Axios for making HTTP requests and the AxiosError type for error handling
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-} from "../../utility/config_utility"; // Import functions to retrieve active and inactive secret statuses
-import { getSecretStatusMessage } from "../../utility/log_utility"; // Import function to format status messages
+} from "../../utility/config_utility.js"; // Import functions to retrieve active and inactive secret statuses
+import { getSecretStatusMessage } from "../../utility/log_utility.js"; // Import function to format status messages
 
 /**
  * Validate an NPM access token by making an API request to check its validity.
- * @param service - The name of the service being validated (in this case, NPM).
- * @param secret - The NPM access token to validate.
- * @param response - A flag to indicate whether to include detailed response data.
- * @param report - An optional flag for additional reporting features.
- * @returns A promise that resolves to a status message about the access token validation.
+ *
+ * @module npm_access_token
+ * 
+ * @param {string} service - The name of the service being validated (in this case, NPM).
+ * @param {string} secret - The NPM access token to validate.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {boolean} [report] - An optional flag for additional reporting features.
+ * 
+ * @returns {Promise<string>} A promise that resolves to a status message about the access token validation.
  */
 export async function validateNpmAccessToken(
   service: string,
@@ -60,12 +75,16 @@ export async function validateNpmAccessToken(
   }
 }
 
+
 /**
- * Handle the case when the NPM access token is inactive or invalid.
- * @param service - The name of the service being validated (NPM).
- * @param response - A flag to indicate whether to include detailed response data.
- * @param data - Optional additional data to include in the response.
- * @returns A formatted status message indicating the inactive status.
+ * Handle the case when the token is inactive or invalid.
+ * 
+ * @function handleInactiveStatus
+ * @param {string} service - The name of the service being validated.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * @param {any} [data] - Optional additional data to include in the response.
+ * 
+ * @returns {string} - A formatted status message indicating the inactive status.
  */
 function handleInactiveStatus(
   service: string,
@@ -92,10 +111,13 @@ function handleInactiveStatus(
 
 /**
  * Handle errors that occur during the validation process.
- * @param error - The error object that was thrown during the request.
- * @param service - The name of the service being validated (NPM).
- * @param response - A flag to indicate whether to include detailed response data.
- * @returns A formatted status message based on the type of error encountered.
+ * 
+ * @function handleErrors
+ * @param {unknown} error - The error object that was thrown.
+ * @param {string} service - The name of the service being validated.
+ * @param {boolean} response - A flag to indicate whether to include detailed response data.
+ * 
+ * @returns {string} - A formatted status message based on the type of error.
  */
 function handleErrors(
   error: unknown,

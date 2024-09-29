@@ -1,14 +1,14 @@
-import { validateSnykAuthKey } from "../validators/snyk/snyk_auth_key"; // Import the Snyk authentication key validator
-import { validateSonarcloudToken } from "../validators/sonarcloud/sonarcloud_token"; // Import the Sonarcloud token validator
-import { validateNpmAccessToken } from "../validators/npm/npm_access_token"; // Import the NPM access token validator
+import { validateSnykAuthKey } from "../validators/snyk/snyk_auth_key.js"; // Import the Snyk authentication key validator
+import { validateSonarcloudToken } from "../validators/sonarcloud/sonarcloud_token.js"; // Import the Sonarcloud token validator
+import { validateNpmAccessToken } from "../validators/npm/npm_access_token.js"; // Import the NPM access token validator
 
 // Define a type for the validator function signature
 type ValidatorFunction = (
-  service: string,
-  secret: string,
-  response: boolean,
-  report?: boolean
-) => Promise<string>;
+  service: string,  // The name of the service being validated
+  secret: string,   // The secret (e.g., API key, token) to validate
+  response: boolean, // Indicates whether to include response data in the output
+  report?: boolean   // Optional parameter for additional reporting functionality
+) => Promise<string>; // The function returns a promise that resolves to a validation result message
 
 // Map of service names to their corresponding validator functions
 const serviceHandlers: Record<string, ValidatorFunction> = {
@@ -20,11 +20,14 @@ const serviceHandlers: Record<string, ValidatorFunction> = {
 
 /**
  * Handle the validation of a service's secret.
- * @param service - The name of the service to validate.
- * @param secret - The secret (e.g., API key, token) to validate.
- * @param response - A boolean indicating whether to include response data in the output.
- * @param report - An optional parameter for additional reporting functionality.
- * @returns A promise that resolves to a string message indicating the validation result.
+ * This function retrieves the appropriate validator function for the specified service
+ * and invokes it with the provided secret and parameters.
+ * 
+ * @param {string} service - The name of the service to validate.
+ * @param {string} secret - The secret (e.g., API key, token) to validate.
+ * @param {boolean} response - A boolean indicating whether to include response data in the output.
+ * @param {boolean} [report] - An optional parameter for additional reporting functionality.
+ * @returns {Promise<string>} A promise that resolves to a string message indicating the validation result.
  */
 export async function validatorHandleService(
   service: string,
