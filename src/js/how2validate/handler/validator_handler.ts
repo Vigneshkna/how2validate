@@ -1,6 +1,6 @@
-import { validateSnykAuthKey } from "../validators/snyk/snyk_auth_key"; // Import the Snyk authentication key validator
-import { validateSonarcloudToken } from "../validators/sonarcloud/sonarcloud_token"; // Import the Sonarcloud token validator
-import { validateNpmAccessToken } from "../validators/npm/npm_access_token"; // Import the NPM access token validator
+import { validateSnykAuthKey } from "../validators/snyk/snyk_auth_key.js"; // Import the Snyk authentication key validator
+import { validateSonarcloudToken } from "../validators/sonarcloud/sonarcloud_token.js"; // Import the Sonarcloud token validator
+import { validateNpmAccessToken } from "../validators/npm/npm_access_token.js"; // Import the NPM access token validator
 
 // Define a type for the validator function signature
 type ValidatorFunction = (

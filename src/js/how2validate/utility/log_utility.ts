@@ -2,7 +2,7 @@
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-} from "./config_utility";
+} from "./config_utility.js";
 
 /**
  * Generates a formatted message about the status of a secret.
@@ -50,7 +50,7 @@ export function getSecretStatusMessage(
 
   // If response data exists, append it to the message
   if (responseData) {
-    message += ` Here is the additional response data:\n${responseData}`;
+    message += `\nHere is the additional response data:\n${responseData}`;
   }
 
   return message; // Return the formatted status message

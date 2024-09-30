@@ -13,8 +13,8 @@ import axios, { AxiosError } from "axios"; // Import Axios for making HTTP reque
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-} from "../../utility/config_utility"; // Import functions to get secret statuses
-import { getSecretStatusMessage } from "../../utility/log_utility"; // Import function to format status messages
+} from "../../utility/config_utility.js"; // Import functions to get secret statuses
+import { getSecretStatusMessage } from "../../utility/log_utility.js"; // Import function to format status messages
 
 /**
  * Validate a Snyk auth key by making an API request to check its validity.

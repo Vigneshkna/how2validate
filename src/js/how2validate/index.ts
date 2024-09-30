@@ -3,15 +3,15 @@ import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
   getVersion,
-} from "./utility/config_utility"; // Importing configuration utility functions
+} from "./utility/config_utility.js"; // Importing configuration utility functions
 import {
   formatString,
   getSecretProviders,
   getSecretscope,
   getSecretServices,
   validateChoice,
-} from "./utility/tool_utility"; // Importing utility functions for secret validation
-import { validatorHandleService } from "./handler/validator_handler"; // Importing the validation handler
+} from "./utility/tool_utility.js"; // Importing utility functions for secret validation
+import { validatorHandleService } from "./handler/validator_handler.js"; // Importing the validation handler
 import { fileURLToPath } from "url";
 
 /**
