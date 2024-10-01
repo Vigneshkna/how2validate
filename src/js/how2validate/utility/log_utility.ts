@@ -3,6 +3,7 @@ import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
 } from "./config_utility.js";
+import { SecretStatusMessage } from "./secretStatusMessage.js";
 
 /**
  * Generates a formatted message about the status of a secret.
@@ -30,15 +31,21 @@ export function getSecretStatusMessage(
   isActive: string,
   response?: boolean,
   responseData?: any
-): string {
+): SecretStatusMessage {
+  let state: string | undefined;
+  let msgData: string;
+  let resData: string = ""; // Initialize as empty string
   let status: string;
 
   // Check if the secret is active or inactive based on the provided status
   if (isActive === getActiveSecretStatus()) {
+    state = getActiveSecretStatus();
     status = "active and operational"; // Set status message for active secret
   } else if (isActive === getInactiveSecretStatus()) {
+    state = getInactiveSecretStatus();
     status = "inactive and not operational"; // Set status message for inactive secret
   } else {
+    state = `Unexpected isActive value: ${isActive}. Expected 'Active' or 'Inactive'.`;
     // Throw an error if the status doesn't match the expected active/inactive values
     throw new Error(
       `Unexpected isActive value: ${isActive}. Expected 'Active' or 'Inactive'.`
@@ -46,12 +53,17 @@ export function getSecretStatusMessage(
   }
 
   // Base message about the secret's status
-  let message = `The provided secret '${service}' is currently ${status}.`;
-
+  msgData = `The provided secret '${service}' is currently ${status}.`; // Assign value without redeclaration
   // If response data exists, append it to the message
-  if (responseData) {
-    message += `\nHere is the additional response data:\n${responseData}`;
+  if (response) {
+    resData = `\nHere is the additional response data:\n${responseData}`;
+  }else{
+    resData = "";
   }
 
-  return message; // Return the formatted status message
+  return {
+    state: state,
+    message: msgData,
+    response: resData, // Ensure it returns the initialized variable
+  }; // Return the formatted status message
 }

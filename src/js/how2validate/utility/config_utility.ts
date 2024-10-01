@@ -19,6 +19,9 @@ let config: Config | null = null;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Path to the package.json file
+const packageJsonPath = path.resolve(__dirname, "..", "..", "package.json");
+
 /**
  * Initializes the configuration by reading the config.ini file.
  * This function reads the config file from the provided path or defaults to
@@ -163,6 +166,29 @@ export function getVersion(): string | undefined {
     return config.DEFAULT.version as string;
   } else {
     throw new Error("Configuration not initialized. Call initConfig() first.");
+  }
+}
+
+/**
+ * Retrieves the app name from the package.json file.
+ * If package.json cannot be read, an error message is logged.
+ *
+ * @returns {string | undefined} The app name from package.json.
+ * 
+ * @throws {Error} If the package.json file is not found or cannot be read.
+ * 
+ * @example
+ * const appName = getAppName();
+ * console.log(appName); // Outputs the app name from package.json
+ */
+export function getAppName(): string {
+  try {
+    const packageJsonContent = fs.readFileSync(packageJsonPath, "utf-8");
+    const packageJson = JSON.parse(packageJsonContent);
+    return packageJson.appName as string;
+  } catch (error) {
+    console.error("Error reading package.json:", error);
+    return "appName";
   }
 }
 

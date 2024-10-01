@@ -6,13 +6,17 @@ import {
 } from "./utility/config_utility.js"; // Importing configuration utility functions
 import {
   formatString,
+  getScopedProviders,
+  getScopedServices,
   getSecretProviders,
   getSecretscope,
   getSecretServices,
+  updateTool,
   validateChoice,
 } from "./utility/tool_utility.js"; // Importing utility functions for secret validation
 import { validatorHandleService } from "./handler/validator_handler.js"; // Importing the validation handler
 import { fileURLToPath } from "url";
+import { ValidationResult } from "./utility/validationResult.js";
 
 /**
  * Creates a new instance of the Commander program to build the CLI application.
@@ -36,13 +40,13 @@ program
  * Retrieve the list of supported secret providers.
  * @type {string[]}
  */
-const providerChoices = getSecretProviders();
+const providerChoices = getScopedProviders();
 
 /**
  * Retrieve the list of supported secret services.
  * @type {string[]}
  */
-const serviceChoices = getSecretServices();
+const serviceChoices = getScopedServices();
 
 /**
  * Define CLI options using Commander.
@@ -76,14 +80,14 @@ program
     `Monitor the status. View if your secret ${getActiveSecretStatus()} or ${getInactiveSecretStatus()}.`
   )
   .option("-report", "Get detailed reports. Receive validated secrets via email [Alpha Feature].", false)
-  // .option("--update", "Hack the tool to the latest version.");
+  .option("--update", "Hack the tool to the latest version.");
 
 /**
  * Get the list of available providers.
  * @returns {string[]} Array of provider names.
  */
-export function getProvider(): string[] {
-  return providerChoices;
+export function getProvider(): object {
+  return getSecretProviders();
 }
 
 /**
@@ -91,7 +95,7 @@ export function getProvider(): string[] {
  * @param {string} provider - The provider to get services for.
  * @returns {string[]} Array of service names.
  */
-export function getService(provider: string): string[] {
+export function getService(provider: string): object {
   return getSecretServices(undefined, provider);
 }
 
@@ -113,16 +117,19 @@ export async function validate(
   service: string,
   secret: string,
   response: boolean,
-  report: boolean
-): Promise<void> {
-  console.info("Started validating secret...");
+  report: boolean,
+  isBrowser:boolean = false
+): Promise<{} | "" | ValidationResult | undefined> {
+  // console.info("Started validating secret...");
   const result = await validatorHandleService(
     formatString(service),
     secret,
     response,
-    report
+    report,
+    isBrowser
   ); // Call the handler for validation
-  console.info(result);
+  // console.info(result);
+  return result;
 }
 
 /**
@@ -156,18 +163,18 @@ async function main(): Promise<void> {
     }
   }
 
-  // // Check for the update option
-  // if (options.update) {
-  //   try {
-  //     console.info("Initiating tool update...");
-  //     await updateTool(); // Call the update function
-  //     console.info("Tool updated successfully.");
-  //     return; // Exit after updating
-  //   } catch (error) {
-  //     console.error(`Error during tool update: ${error}`); // Log any errors
-  //     return;
-  //   }
-  // }
+  // Check for the update option
+  if (options.update) {
+    try {
+      console.info("Initiating tool update...");
+      await updateTool(); // Call the update function
+      console.info("Tool updated successfully.");
+      return; // Exit after updating
+    } catch (error) {
+      console.error(`Error during tool update: ${error}`); // Log any errors
+      return;
+    }
+  }
 
   // Validate required arguments
   if (!options.provider || !options.service || !options.secret) {
