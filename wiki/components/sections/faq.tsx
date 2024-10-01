@@ -1,6 +1,6 @@
 export const Faq = () => {
     return (<>
-        <h3 className="text-2xl font-bold mb-4">FAQ's</h3>
+        <h3 className="text-2xl font-bold mb-4">FAQs</h3>
         <div className="space-y-4">
             <div>
                 <h4 className="font-semibold mb-2">Q1: Question 1</h4>
