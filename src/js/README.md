@@ -52,7 +52,7 @@ Ensuring the authenticity of your secrets.
 ### Install the package:
 
 
-- Npm
+### Npm
 
 ```bash
 npx jsr add @how2validate/how2validate
@@ -70,7 +70,7 @@ print(validation_result)
 ```
 
 
-- pnpm
+### pnpm
 
 ```bash
 pnpm dlx jsr add @how2validate/how2validate
@@ -83,7 +83,7 @@ import { validate } from '@how2validate/how2validate';
 ```
 
 
-- bun
+### bun
 
 ```bash
 bunx jsr add @how2validate/how2validate
@@ -96,7 +96,7 @@ import { validate } from '@how2validate/how2validate';
 ```
 
 
-- yarn
+### yarn
 
 ```bash
 yarn dlx jsr add @how2validate/how2validate
@@ -109,7 +109,7 @@ import { validate } from '@how2validate/how2validate';
 ```
 
 
-- Deno
+### Deno
 
 ```bash
 deno add jsr:@how2validate/how2validate
@@ -137,6 +137,7 @@ var validation_result = validate(
     secret="<<SECRET_HERE>>",
     response=False,
     report=False,
+    isBrowser=True
 )
 print(validation_result)
 
