@@ -1,5 +1,5 @@
 /**
- * @module NPM Auth Token Validator
+ * @module NPM Access Token Validator
  * @description
  * This module provides functionality to validate NPM Auth Tokens by interacting with the NPM API.
  * It checks the validity of the provided token and returns appropriate status messages based on the response.

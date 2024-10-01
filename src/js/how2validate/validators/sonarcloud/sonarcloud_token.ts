@@ -40,7 +40,7 @@ function getCurrentTimestamp(): string {
  * @returns {Promise<ValidationResult>} - A promise that resolves to a validation result object.
  * @throws {Error} - Throws an error if the validation process encounters an unexpected issue.
  */
-export async function validateSonarCloudAccessToken(
+export async function validateSonarcloudToken(
   service: string,
   secret: string,
   responseFlag: boolean,

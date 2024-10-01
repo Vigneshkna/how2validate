@@ -1,3 +1,10 @@
+/**
+ * @module How2Validate CLI Tool
+ * This module provides a command-line interface (CLI) tool for validating secrets across various services and providers.
+ * The tool allows users to specify providers, services, and secrets for validation, and supports features such as 
+ * status monitoring, report generation, and tool updates.
+ */
+
 import { Command } from "commander"; // Importing Commander for building CLI applications
 import {
   getActiveSecretStatus,
@@ -109,6 +116,7 @@ export function getService(provider: string): object {
  * @param {string} secret - The secret that needs to be validated.
  * @param {boolean} response - Whether to get a response status for the secret.
  * @param {boolean} report - Whether to generate a report for the validation.
+ * @param {boolean} [isBrowser=false] - Whether the validation is being run in a browser environment.
  * @returns {Promise<void>} - A promise that resolves when validation is complete.
  * @throws Will throw an error if validation fails.
  */
@@ -120,7 +128,6 @@ export async function validate(
   report: boolean,
   isBrowser:boolean = false
 ): Promise<{} | "" | ValidationResult | undefined> {
-  // console.info("Started validating secret...");
   const result = await validatorHandleService(
     formatString(service),
     secret,
@@ -128,7 +135,6 @@ export async function validate(
     report,
     isBrowser
   ); // Call the handler for validation
-  // console.info(result);
   return result;
 }
 

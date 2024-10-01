@@ -19,7 +19,7 @@ const tokenManager_filePath = path.join(
   "tokenManager.json"
 );
 
-const appName = getAppName();
+const appName = getAppName() || 'How2Validate'; // Initialize appName
 
 // Function to get the current timestamp in ISO format
 function getCurrentTimestamp(): string {

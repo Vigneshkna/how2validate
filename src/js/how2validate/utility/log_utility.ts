@@ -6,6 +6,11 @@ import {
 import { SecretStatusMessage } from "./secretStatusMessage.js";
 
 /**
+ * @module SecretStatus
+ * This module provides functionality for retrieving and formatting secret status messages.
+ */
+
+/**
  * Generates a formatted message about the status of a secret.
  * This function evaluates whether the secret is active or inactive and constructs
  * a corresponding status message, with optional response data for additional context.
@@ -15,7 +20,7 @@ import { SecretStatusMessage } from "./secretStatusMessage.js";
  * This value is compared against the active/inactive status from the config.
  * @param {boolean} [response] - Optional boolean to indicate whether there is a response (not used for formatting).
  * @param {any} [responseData] - Optional data to provide additional context, appended to the message if available.
- * @returns {string} A formatted message describing the secret's status and response data (if provided).
+ * @returns {SecretStatusMessage} A formatted message describing the secret's status and response data (if provided).
  * 
  * @throws {Error} If the isActive value is not recognized (neither active nor inactive).
  * 
@@ -25,6 +30,10 @@ import { SecretStatusMessage } from "./secretStatusMessage.js";
  * const message = getSecretStatusMessage(service, isActive);
  * console.log(message);
  * // Output: "The provided secret 'Payment Service' is currently active and operational."
+ *
+ * @symbol state - The state of the secret based on its status (active or inactive).
+ * @symbol message - A formatted message describing the secret's current operational status.
+ * @symbol response - Additional response data if provided, or an empty string if not.
  */
 export function getSecretStatusMessage(
   service: string,
@@ -57,7 +66,7 @@ export function getSecretStatusMessage(
   // If response data exists, append it to the message
   if (response) {
     resData = `\nHere is the additional response data:\n${responseData}`;
-  }else{
+  } else {
     resData = "";
   }
 

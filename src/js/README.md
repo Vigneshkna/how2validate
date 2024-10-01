@@ -51,27 +51,84 @@ Ensuring the authenticity of your secrets.
 
 ### Install the package:
 
+
 - Npm
 
 ```bash
-npm install how2validate
+npx jsr add @how2validate/how2validate
 ```
 
 #### Import the package and use the validate function:
 
 ```js
-import { validate } from 'how2validate'
+import { validate } from '@how2validate/how2validate';
 
 # Validate secrets programmatically
-var validation_result = validate(provider,service, secret, response, report)
+var validation_result = validate(provider,service, secret, response, report, isBrowser)
 print(validation_result)
 
+```
+
+
+- pnpm
+
+```bash
+pnpm dlx jsr add @how2validate/how2validate
+```
+
+#### Import the package and use the validate function:
+
+```js
+import { validate } from '@how2validate/how2validate';
+```
+
+
+- bun
+
+```bash
+bunx jsr add @how2validate/how2validate
+```
+
+#### Import the package and use the validate function:
+
+```js
+import { validate } from '@how2validate/how2validate';
+```
+
+
+- yarn
+
+```bash
+yarn dlx jsr add @how2validate/how2validate
+```
+
+#### Import the package and use the validate function:
+
+```js
+import { validate } from '@how2validate/how2validate';
+```
+
+
+- Deno
+
+```bash
+deno add jsr:@how2validate/how2validate
+```
+
+#### Import the package and use the validate function:
+
+```js
+import { validate } from '@how2validate/how2validate';
+
+-- OR --
+
+import { validate } from "jsr:@how2validate/how2validate";
 ```
 
 ### Example usage of validate function:
 
 ```js
-import { validate } from 'how2validate'
+import { validate } from '@how2validate/how2validate';
 
 # Validate secrets programmatically
 var validation_result = validate(

@@ -100,6 +100,8 @@ function parseConfigContent(content: string): Config {
  * @example
  * const packageName = getPackageName();
  * console.log(packageName); // Outputs the package name from config
+ * 
+ * @symbol package_name - The name of the package defined in the DEFAULT section.
  */
 export function getPackageName(): string | undefined {
   if (config && config.DEFAULT) {
@@ -120,6 +122,8 @@ export function getPackageName(): string | undefined {
  * @example
  * const activeSecret = getActiveSecretStatus();
  * console.log(activeSecret); // Outputs the active secret status from config
+ * 
+ * @symbol secret_active - The status of the active secret defined in the SECRET section.
  */
 export function getActiveSecretStatus(): string | undefined {
   if (config && config.SECRET) {
@@ -140,6 +144,8 @@ export function getActiveSecretStatus(): string | undefined {
  * @example
  * const inactiveSecret = getInactiveSecretStatus();
  * console.log(inactiveSecret); // Outputs the inactive secret status from config
+ * 
+ * @symbol secret_inactive - The status of the inactive secret defined in the SECRET section.
  */
 export function getInactiveSecretStatus(): string | undefined {
   if (config && config.SECRET) {
@@ -160,6 +166,8 @@ export function getInactiveSecretStatus(): string | undefined {
  * @example
  * const version = getVersion();
  * console.log(version); // Outputs the version from config
+ * 
+ * @symbol version - The version of the package defined in the DEFAULT section.
  */
 export function getVersion(): string | undefined {
   if (config && config.DEFAULT) {
@@ -180,6 +188,8 @@ export function getVersion(): string | undefined {
  * @example
  * const appName = getAppName();
  * console.log(appName); // Outputs the app name from package.json
+ * 
+ * @symbol appName - The name of the application defined in package.json.
  */
 export function getAppName(): string {
   try {
