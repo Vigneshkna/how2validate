@@ -13,7 +13,6 @@ import axios, { AxiosError } from "axios"; // Import Axios for making HTTP reque
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
-  getAppName,
 } from "../../utility/config_utility.js"; // Import functions to get secret statuses and app name
 import { getSecretStatusMessage } from "../../utility/log_utility.js"; // Import function to format status messages
 import { ValidationResult } from "../../utility/validationResult.js";
@@ -47,7 +46,7 @@ export async function validateSnykAuthKey(
   report?: boolean,
   isBrowser: boolean = false
 ): Promise<ValidationResult | {} | "" | undefined> {
-  const appName = getAppName() || "How2Validate";
+  const appName = "How2Validate";
   const timestamp = getCurrentTimestamp();
   const url = "https://snyk.io/api/v1/user";
   const nocacheHeaders = { "Cache-Control": "no-cache" };
@@ -170,7 +169,7 @@ function handleInactiveStatus(
   report?: boolean,
   isBrowser: boolean = false
 ): ValidationResult | {} | "" | undefined {
-  const appName = getAppName() || "How2Validate";
+  const appName = "How2Validate";
   const timestamp = getCurrentTimestamp();
 
   const res = getSecretStatusMessage(
@@ -237,7 +236,7 @@ function handleErrors(
   report?: boolean,
   isBrowser: boolean = false
 ): ValidationResult | {} | "" | undefined {
-  const appName = getAppName() || "How2Validate";
+  const appName = "How2Validate";
   const timestamp = getCurrentTimestamp();
 
   if (axios.isAxiosError(error)) {

@@ -5,7 +5,7 @@ import * as logging from "loglevel"; // Importing loglevel for logging messages
 import Table from 'cli-table3'; // Importing cli-table3 for formatted table display
 import { execSync } from "child_process";
 
-import { getAppName, getPackageName } from "./config_utility.js"; // Importing a function to get the package name from configuration
+import { getPackageName } from "./config_utility.js"; // Importing a function to get the package name from configuration
 
 // Convert import.meta.url to __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -19,7 +19,7 @@ const tokenManager_filePath = path.join(
   "tokenManager.json"
 );
 
-const appName = getAppName() || 'How2Validate'; // Initialize appName
+const appName = 'How2Validate'; // Initialize appName
 
 // Function to get the current timestamp in ISO format
 function getCurrentTimestamp(): string {

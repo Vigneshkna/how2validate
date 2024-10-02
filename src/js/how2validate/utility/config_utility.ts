@@ -1,7 +1,22 @@
+/**
+ * @module config_utility
+ * @description
+ * This module provides functionality to initialize and access configuration settings
+ * by reading from a config.ini file. It ensures that the configuration is loaded
+ * before any dependent functions are used.
+ *
+ * @requires fs
+ * @requires path
+ * @requires url
+ */
+
 import * as path from "path";
 import * as fs from "fs";
 import { fileURLToPath } from 'url';
 
+/**
+ * Interface representing the structure of the configuration.
+ */
 interface Config {
   DEFAULT?: {
     package_name?: string;
@@ -13,40 +28,49 @@ interface Config {
   };
 }
 
+/**
+ * Holds the loaded configuration. Initialized to null until `initConfig` is called.
+ */
 let config: Config | null = null;
 
-// Get the directory name
+/**
+ * Get the directory name of the current module.
+ */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Path to the package.json file
-const packageJsonPath = path.resolve(__dirname, "..", "..", "package.json");
 
 /**
  * Initializes the configuration by reading the config.ini file.
  * This function reads the config file from the provided path or defaults to
  * the root configuration file located two levels above the current directory.
  *
- * @module config_utility
- * 
+ * @function initConfig
  * @param {string} [configFilePath] - The custom file path for config.ini (optional).
  * If not provided, the function will attempt to load the config file from
  * the default location.
+ * 
+ * @throws {Error} If the config file cannot be read or parsed.
  * 
  * @example
  * initConfig(); // Initializes with default config path
  * initConfig('/custom/path/config.ini'); // Initializes with a custom config file path
  */
-export function initConfig(configFilePath?: string) {
+export function initConfig(configFilePath?: string): void {
   const resolvedPath = configFilePath || path.resolve(__dirname, "..", "..", "config.ini");
-
+  
+  console.log(`Initializing configuration from: ${resolvedPath}`);
+  
   try {
+    if (!fs.existsSync(resolvedPath)) {
+      throw new Error(`Configuration file not found at path: ${resolvedPath}`);
+    }
+
     const configContent = fs.readFileSync(resolvedPath, "utf-8");
-    config = parseConfigContent(configContent); // Use a custom parsing function
+    config = parseConfigContent(configContent);
+    console.log("Configuration successfully initialized.");
   } catch (error) {
-    console.error(
-      `Error: The file '${resolvedPath}' was not found or could not be read.`
-    );
+    console.error(`Error initializing configuration: ${(error as Error).message}`);
+    throw error; // Rethrow to prevent application from running with invalid config
   }
 }
 
@@ -55,7 +79,6 @@ export function initConfig(configFilePath?: string) {
  * This function splits the content into sections and keys, building the Config object.
  *
  * @private
- * 
  * @param {string} content - The content of the config.ini file.
  * @returns {Config} The parsed configuration object.
  * 
@@ -77,12 +100,14 @@ function parseConfigContent(content: string): Config {
     if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
       // New section
       currentSection = trimmedLine.slice(1, -1) as keyof Config;
-      result[currentSection] = {}; // Initialize the section as an object
+      if (!result[currentSection]) {
+        result[currentSection] = {};
+      }
     } else if (currentSection) {
       const [key, value] = trimmedLine.split("=").map((part) => part.trim());
-
-      // Using type assertion to tell TypeScript that currentSection is valid
-      (result[currentSection] as Record<string, string | undefined>)[key] = value;
+      if (key && value !== undefined) {
+        (result[currentSection] as Record<string, string | undefined>)[key] = value;
+      }
     }
   }
 
@@ -91,10 +116,9 @@ function parseConfigContent(content: string): Config {
 
 /**
  * Retrieves the package name from the 'DEFAULT' section of the configuration.
- * If the configuration has not been initialized, an error is thrown.
  *
- * @returns {string | undefined} The package name if available, or throws an error if the configuration is not initialized.
- * 
+ * @function getPackageName
+ * @returns {string | undefined} The package name if available.
  * @throws {Error} If the configuration is not initialized.
  * 
  * @example
@@ -104,19 +128,18 @@ function parseConfigContent(content: string): Config {
  * @symbol package_name - The name of the package defined in the DEFAULT section.
  */
 export function getPackageName(): string | undefined {
-  if (config && config.DEFAULT) {
-    return config.DEFAULT.package_name as string;
+  if (config && config.DEFAULT && config.DEFAULT.package_name) {
+    return config.DEFAULT.package_name;
   } else {
-    throw new Error("Configuration not initialized. Call initConfig() first.");
+    throw new Error("Configuration not initialized or 'package_name' not set. Call initConfig() first.");
   }
 }
 
 /**
  * Retrieves the active secret status from the 'SECRET' section of the configuration.
- * If the configuration has not been initialized, an error is thrown.
  *
- * @returns {string | undefined} The active secret status or throws an error if the configuration is not initialized.
- * 
+ * @function getActiveSecretStatus
+ * @returns {string | undefined} The active secret status.
  * @throws {Error} If the configuration is not initialized.
  * 
  * @example
@@ -126,19 +149,18 @@ export function getPackageName(): string | undefined {
  * @symbol secret_active - The status of the active secret defined in the SECRET section.
  */
 export function getActiveSecretStatus(): string | undefined {
-  if (config && config.SECRET) {
-    return config.SECRET.secret_active as string;
+  if (config && config.SECRET && config.SECRET.secret_active) {
+    return config.SECRET.secret_active;
   } else {
-    throw new Error("Configuration not initialized. Call initConfig() first.");
+    throw new Error("Configuration not initialized or 'secret_active' not set. Call initConfig() first.");
   }
 }
 
 /**
  * Retrieves the inactive secret status from the 'SECRET' section of the configuration.
- * If the configuration has not been initialized, an error is thrown.
  *
- * @returns {string | undefined} The inactive secret status or throws an error if the configuration is not initialized.
- * 
+ * @function getInactiveSecretStatus
+ * @returns {string | undefined} The inactive secret status.
  * @throws {Error} If the configuration is not initialized.
  * 
  * @example
@@ -148,19 +170,18 @@ export function getActiveSecretStatus(): string | undefined {
  * @symbol secret_inactive - The status of the inactive secret defined in the SECRET section.
  */
 export function getInactiveSecretStatus(): string | undefined {
-  if (config && config.SECRET) {
-    return config.SECRET.secret_inactive as string;
+  if (config && config.SECRET && config.SECRET.secret_inactive) {
+    return config.SECRET.secret_inactive;
   } else {
-    throw new Error("Configuration not initialized. Call initConfig() first.");
+    throw new Error("Configuration not initialized or 'secret_inactive' not set. Call initConfig() first.");
   }
 }
 
 /**
  * Retrieves the version from the 'DEFAULT' section of the configuration.
- * If the configuration has not been initialized, an error is thrown.
  *
- * @returns {string | undefined} The version if available, or throws an error if the configuration is not initialized.
- * 
+ * @function getVersion
+ * @returns {string | undefined} The version if available.
  * @throws {Error} If the configuration is not initialized.
  * 
  * @example
@@ -170,37 +191,34 @@ export function getInactiveSecretStatus(): string | undefined {
  * @symbol version - The version of the package defined in the DEFAULT section.
  */
 export function getVersion(): string | undefined {
-  if (config && config.DEFAULT) {
-    return config.DEFAULT.version as string;
+  if (config && config.DEFAULT && config.DEFAULT.version) {
+    return config.DEFAULT.version;
   } else {
-    throw new Error("Configuration not initialized. Call initConfig() first.");
+    throw new Error("Configuration not initialized or 'version' not set. Call initConfig() first.");
   }
 }
 
 /**
- * Retrieves the app name from the package.json file.
- * If package.json cannot be read, an error message is logged.
+ * Retrieves the application name from the 'DEFAULT' section of the configuration.
  *
- * @returns {string | undefined} The app name from package.json.
- * 
- * @throws {Error} If the package.json file is not found or cannot be read.
+ * @function getAppName
+ * @returns {string | undefined} The application name if available.
+ * @throws {Error} If the configuration is not initialized.
  * 
  * @example
  * const appName = getAppName();
- * console.log(appName); // Outputs the app name from package.json
+ * console.log(appName); // Outputs the application name from config
  * 
- * @symbol appName - The name of the application defined in package.json.
+ * @symbol appName - The name of the application defined in the DEFAULT section.
  */
-export function getAppName(): string {
-  try {
-    const packageJsonContent = fs.readFileSync(packageJsonPath, "utf-8");
-    const packageJson = JSON.parse(packageJsonContent);
-    return packageJson.appName as string;
-  } catch (error) {
-    console.error("Error reading package.json:", error);
-    return "appName";
+export function getAppName(): string | undefined {
+  if (config && config.DEFAULT && config.DEFAULT.package_name) {
+    return config.DEFAULT.package_name;
+  } else {
+    throw new Error("Configuration not initialized or 'package_name' not set. Call initConfig() first.");
   }
 }
 
 // Automatically initialize config when the file is imported
+// You can comment this out if you prefer explicit initialization in your API routes
 initConfig();
