@@ -56,8 +56,8 @@ const __dirname = path.dirname(__filename);
  * initConfig('/custom/path/config.ini'); // Initializes with a custom config file path
  */
 export function initConfig(configFilePath?: string): void {
-  const resolvedPath = configFilePath || path.resolve(__dirname, "..", "..", "config.ini");
-  
+  const resolvedPath = configFilePath || path.resolve(process.cwd(), "config.ini");
+    
   console.log(`Initializing configuration from: ${resolvedPath}`);
   
   try {
