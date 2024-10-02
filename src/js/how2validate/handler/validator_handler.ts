@@ -2,6 +2,8 @@ import { validateSnykAuthKey } from "../validators/snyk/snyk_auth_key.js"; // Im
 import { validateSonarcloudToken } from "../validators/sonarcloud/sonarcloud_token.js"; // Import the Sonarcloud token validator
 import { validateNpmAccessToken } from "../validators/npm/npm_access_token.js"; // Import the NPM access token validator
 import { ValidationResult } from "../utility/validationResult.js"; // Import the ValidationResult type
+import path from "path";
+import { initConfig } from "../utility/config_utility.js";
 
 /**
  * @module validatorHandleService
@@ -65,6 +67,10 @@ export async function validatorHandleService(
   const handler = serviceHandlers[service];
 
   if (handler) {
+    if(isBrowser){
+      const configFilePath = path.join(process.cwd(), 'node_modules/@how2validate/how2validate/config.ini');
+      initConfig(configFilePath)
+    }
     // If a handler exists, call it with the provided parameters
     return handler(service, secret, response, report, isBrowser);
   } else {
