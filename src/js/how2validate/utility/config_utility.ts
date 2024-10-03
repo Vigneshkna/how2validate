@@ -2,7 +2,7 @@
  * @module config_utility
  * @description
  * This module provides functionality to initialize and access configuration settings
- * by reading from a config.ini file. It ensures that the configuration is loaded
+ * by reading from a config.json file. It ensures that the configuration is loaded
  * before any dependent functions are used.
  *
  * @requires fs
@@ -40,12 +40,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Initializes the configuration by reading the config.ini file.
+ * Initializes the configuration by reading the config.json file.
  * This function reads the config file from the provided path or defaults to
  * the root configuration file located two levels above the current directory.
  *
  * @function initConfig
- * @param {string} [configFilePath] - The custom file path for config.ini (optional).
+ * @param {string} [configFilePath] - The custom file path for config.json (optional).
  * If not provided, the function will attempt to load the config file from
  * the default location.
  * 
@@ -53,12 +53,10 @@ const __dirname = path.dirname(__filename);
  * 
  * @example
  * initConfig(); // Initializes with default config path
- * initConfig('/custom/path/config.ini'); // Initializes with a custom config file path
+ * initConfig('/custom/path/config.json'); // Initializes with a custom config file path
  */
 export function initConfig(configFilePath?: string): void {
-  const resolvedPath = configFilePath || path.resolve(process.cwd(), "config.ini");
-    
-  console.log(`Initializing configuration from: ${resolvedPath}`);
+  const resolvedPath = configFilePath || path.resolve(__dirname, "..", "..", "config.json");
   
   try {
     if (!fs.existsSync(resolvedPath)) {
@@ -66,52 +64,10 @@ export function initConfig(configFilePath?: string): void {
     }
 
     const configContent = fs.readFileSync(resolvedPath, "utf-8");
-    config = parseConfigContent(configContent);
-    console.log("Configuration successfully initialized.");
+    config = JSON.parse(configContent); // Parse JSON content
   } catch (error) {
-    console.error(`Error initializing configuration: ${(error as Error).message}`);
     throw error; // Rethrow to prevent application from running with invalid config
   }
-}
-
-/**
- * Parses the content of the config.ini file and converts it to a Config object.
- * This function splits the content into sections and keys, building the Config object.
- *
- * @private
- * @param {string} content - The content of the config.ini file.
- * @returns {Config} The parsed configuration object.
- * 
- * @example
- * const configContent = "[DEFAULT]\npackage_name=my-package\nversion=1.0.0";
- * const config = parseConfigContent(configContent);
- * console.log(config.DEFAULT.package_name); // 'my-package'
- */
-function parseConfigContent(content: string): Config {
-  const lines = content.split("\n");
-  const result: Config = {};
-
-  let currentSection: keyof Config | null = null;
-
-  for (const line of lines) {
-    const trimmedLine = line.trim();
-    if (!trimmedLine || trimmedLine.startsWith(";")) continue; // Skip empty or comment lines
-
-    if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
-      // New section
-      currentSection = trimmedLine.slice(1, -1) as keyof Config;
-      if (!result[currentSection]) {
-        result[currentSection] = {};
-      }
-    } else if (currentSection) {
-      const [key, value] = trimmedLine.split("=").map((part) => part.trim());
-      if (key && value !== undefined) {
-        (result[currentSection] as Record<string, string | undefined>)[key] = value;
-      }
-    }
-  }
-
-  return result;
 }
 
 /**

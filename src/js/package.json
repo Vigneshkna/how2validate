@@ -54,6 +54,7 @@
   "files": [
     "how2validate/*",
     "./config.ini",
+    "./config.json",
     "./tokenManager.json"
   ]
 }

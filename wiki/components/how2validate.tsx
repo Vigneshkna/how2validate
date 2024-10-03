@@ -25,17 +25,25 @@ export function How2validate() {
 
         <main className="container mx-auto px-4 py-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-2">How2Validate</h2>
+            <h1 className="text-3xl font-bold mb-2">How2Validate</h1>
             <p className="text-muted-foreground">A CLI tool to validate secrets for different services.</p>
           </div>
 
           <Tabs />
+
+          <section className="mb-8" id="intro">
+            <TxtSection sectionTitle={"What is How2Validate"} infoTxt={"Welcome to How2Validate — your security-focused tool for validating sensitive secrets. Whether you're a developer, security professional, or DevOps engineer, How2Validate ensures that your API keys, tokens, and other sensitive information are authentic and secure by verifying them against official provider endpoints."} />
+          </section>
 
           <section className="mb-8" id="summary">
             <TxtSection sectionTitle={"Quick Summary"} infoTxt={""} />
           </section>
           <section className="mb-8" id="spec">
             <TxtSection sectionTitle={"Full Specification"} infoTxt={""} />
+          </section>
+
+          <section className="mb-8" id="version">
+            <TxtSection sectionTitle={"Versions"} infoTxt={""} />
           </section>
 
 
