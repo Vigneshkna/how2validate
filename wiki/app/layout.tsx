@@ -31,13 +31,17 @@ export const metadata: Metadata = {
     siteName: "How2Validate",
     description: "A CLI tool to validate secrets for different services.",
     url: "https://how2validate.com",
+    images: [{
+      url: "./img/How2Validate.png",
+    }],
   },
   twitter: {
     card: "summary_large_image",
     title: "How2Validate",
     description: "A CLI tool to validate secrets for different services.",
     site: "@site", 
-    creator: "@creator",
+    creator: "@creator", 
+    images: "./img/How2Validate.png"
   }
 };
 
