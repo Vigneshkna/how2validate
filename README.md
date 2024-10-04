@@ -36,6 +36,12 @@ In today's digital landscape, the exposure of sensitive information such as API 
 - **Detailed Reporting**: Receive comprehensive reports on secret validation (Alpha Feature).
 - **Updating Providers**: Keep the tool up-to-date with the latest secret providers and their secret types.
 
+## Join Our Community discussions
+
+Have questions? Feedback? Jump in and hang out with us
+
+Join our [GitHub Community Discussion](https://github.com/Blackplums/how2validate/discussions)
+
 ## Packages
 
 **How2Validate** is available for multiple platforms, ensuring seamless secret validation process. Choose the package manager that best fits your project needs:
@@ -253,3 +259,8 @@ result = validate(
 )
 print(result)
 ```
+
+## License
+
+All `how2validate` packages are released under the MIT license.
+
