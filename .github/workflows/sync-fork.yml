@@ -1,0 +1,37 @@
+name: Sync Fork
+
+on:
+  # Schedule a job to run daily at midnight UTC
+  schedule:
+    - cron: "*/5 */1 * * *"
+    # 0 */6 * * *
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: Vigneshkna/how2validate
+      - name: Configure Git
+        run: |
+          git config --global user.name "CI Bot"
+          git config --global user.email "noreply@github.com"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch upstream changes
+        run: git fetch upstream
+      - uses: actions/checkout@v3
+        with:
+          repository: Blackplums/how2validate
+      - name: List branches to sync
+        id: list-branches
+        run: |
+          git branch --list -r | grep -E 'origin/(main|deploy\/package)$' | sed 's/origin\/\(.*\)/\1/'
+      - name: Sync each branch
+        run: |
+          for branch in ${{ steps.list-branches.outputs.branches }}; do
+            git checkout $branch
+            git merge upstream/$branch
+            git push origin $branch
+          done
