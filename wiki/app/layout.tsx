@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     description: "A CLI tool to validate secrets for different services.",
     url: "https://how2validate.com",
     images: [{
-      url: "./img/How2Validate.png",
+      url: "https://repository-images.githubusercontent.com/852339948/f8b583f1-d0aa-4d1e-a672-d3c7699d1c0e",
     }],
   },
   twitter: {
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     description: "A CLI tool to validate secrets for different services.",
     site: "@site", 
     creator: "@creator", 
-    images: "./img/How2Validate.png"
+    images: "https://repository-images.githubusercontent.com/852339948/f8b583f1-d0aa-4d1e-a672-d3c7699d1c0e"
   }
 };
 
