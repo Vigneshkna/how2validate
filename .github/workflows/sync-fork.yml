@@ -3,7 +3,7 @@ name: Sync Fork
 on:
   # Schedule a job to run daily at midnight UTC
   schedule:
-    - cron: 12 * * * *
+    - cron: 0,45 * * * *
     # 0 */6 * * *
 
 jobs:
