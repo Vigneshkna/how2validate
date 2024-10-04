@@ -10,7 +10,7 @@ jobs:
   sync-branches:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: Vigneshkna/how2validate
       - name: Configure Git
@@ -20,8 +20,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Fetch upstream changes
-        run: git fetch upstream
-      - uses: actions/checkout@v3
+        run: |
+          git remote add upstream https://github.com/Blackplums/how2validate
+          git fetch upstream
+      - uses: actions/checkout@v4
         with:
           repository: Blackplums/how2validate
       - name: List branches to sync
