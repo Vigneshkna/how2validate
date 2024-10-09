@@ -104,7 +104,7 @@ export function getPackageName(): string | undefined {
  * 
  * @symbol secret_active - The status of the active secret defined in the SECRET section.
  */
-export function getActiveSecretStatus(): string | undefined {
+export function getActiveSecretStatus(): string{
   if (config && config.SECRET && config.SECRET.secret_active) {
     return config.SECRET.secret_active;
   } else {
@@ -125,7 +125,7 @@ export function getActiveSecretStatus(): string | undefined {
  * 
  * @symbol secret_inactive - The status of the inactive secret defined in the SECRET section.
  */
-export function getInactiveSecretStatus(): string | undefined {
+export function getInactiveSecretStatus(): string {
   if (config && config.SECRET && config.SECRET.secret_inactive) {
     return config.SECRET.secret_inactive;
   } else {

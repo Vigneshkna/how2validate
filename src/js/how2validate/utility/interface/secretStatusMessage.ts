@@ -12,7 +12,7 @@
  * @symbol response - The response from the validation process, which may be undefined.
  */
 export interface SecretStatusMessage {
-  state: string | undefined;
-  message: string | undefined;
-  response: string | undefined;
+  state: string;
+  message: string;
+  response: string;
 }
