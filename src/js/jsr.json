@@ -7,7 +7,6 @@
         "include": [
             "LICENSE",
             "README.md",
-            "config.ini",
             "config.json",
             "tokenManager.json",
             "how2validate"

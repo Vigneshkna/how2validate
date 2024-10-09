@@ -3,24 +3,24 @@ import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
 } from "./config_utility.js";
-import { SecretStatusMessage } from "./secretStatusMessage.js";
+import { SecretStatusMessage } from "./interface/secretStatusMessage.js";
 
 /**
  * @module SecretStatus
- * This module provides functionality for retrieving and formatting secret status messages.
+ * This module provides functionality for retrieving and formatting messages about secret statuses.
  */
 
 /**
- * Generates a formatted message about the status of a secret.
- * This function evaluates whether the secret is active or inactive and constructs
+ * Generates a formatted message regarding the status of a secret.
+ * This function determines if the secret is active or inactive and constructs
  * a corresponding status message, with optional response data for additional context.
  *
  * @param {string} service - The name of the service associated with the secret.
  * @param {string} isActive - The current status of the secret (active or inactive).
- * This value is compared against the active/inactive status from the config.
- * @param {boolean} [response] - Optional boolean to indicate whether there is a response (not used for formatting).
+ * This value is evaluated against the active/inactive statuses from the config.
+ * @param {boolean} [response] - Optional boolean indicating whether there is a response (not utilized in formatting).
  * @param {any} [responseData] - Optional data to provide additional context, appended to the message if available.
- * @returns {SecretStatusMessage} A formatted message describing the secret's status and response data (if provided).
+ * @returns {SecretStatusMessage} A formatted message describing the secret's status and any response data (if provided).
  * 
  * @throws {Error} If the isActive value is not recognized (neither active nor inactive).
  * 
@@ -38,12 +38,11 @@ import { SecretStatusMessage } from "./secretStatusMessage.js";
 export function getSecretStatusMessage(
   service: string,
   isActive: string,
-  response?: boolean,
-  responseData?: any
+  responseData: string
 ): SecretStatusMessage {
-  let state: string | undefined;
+  let state: string;
   let msgData: string;
-  let resData: string = ""; // Initialize as empty string
+  let resData: string = "";
   let status: string;
 
   // Check if the secret is active or inactive based on the provided status
@@ -63,12 +62,7 @@ export function getSecretStatusMessage(
 
   // Base message about the secret's status
   msgData = `The provided secret '${service}' is currently ${status}.`; // Assign value without redeclaration
-  // If response data exists, append it to the message
-  if (response) {
-    resData = `\nHere is the additional response data:\n${responseData}`;
-  } else {
-    resData = "";
-  }
+  resData = `\n${responseData}`;
 
   return {
     state: state,

@@ -22,24 +22,25 @@ export interface ValidationResult {
   data?: {
     /**
      * Information about the validation process.
-     * @type {{ message: string; response: any; report?: string }}
+     * @type {{ state: string;, message: string; response: any; report?: string }}
      */
-    validate?: {
+    validate: {
+      state: string;
       /** The message describing the validation result. */
       message: string;
 
       /** The response received from the validation request. */
-      response: any;
+      response: string;
 
       /** An optional report email or contact. */
-      report?: string;
+      report: string;
     };
 
     /** An optional array of providers associated with the validation. */
-    provider?: string[];
+    provider: string;
 
     /** An optional array of services associated with the validation. */
-    services?: string[];
+    services: string;
   };
 
   /**
