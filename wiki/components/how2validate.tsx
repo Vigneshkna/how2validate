@@ -8,6 +8,10 @@ import { ValidationForm } from "./sections/validations"
 import { Foo } from "./sections/footer"
 import { Faq } from "./sections/faq"
 import { Header } from "./sections/header"
+import CodeBlock from "./sections/code-snippet"
+import { apiParams, apiParamsRec, apiPyParamsRec, apiPyReturns, apiReturns, cliString, codeStringJS, ex1, ex2, pyString, resStatus, secret } from "@/mocks/code-blocks"
+import RingBullet from "./sections/text-bulletin"
+import { Readme } from "./sections/readme"
 
 export function How2validate() {
   const [theme, setTheme] = useState<"light" | "dark">("light")
@@ -15,6 +19,12 @@ export function How2validate() {
   const toggleTheme = () => {    
     setTheme(theme === "light" ? "dark" : "light")
   }
+
+  const items = [
+    'Item 1: This is a description for item 1.',
+    'Item 2: This is a description for item 2.',
+    'Item 3: This is a description for item 3.',
+  ];
 
   return (
     <div className={`min-h-screen ${theme === "dark" ? "dark" : ""}`}>
@@ -42,14 +52,8 @@ export function How2validate() {
             <TxtSection sectionTitle={"Full Specification"} infoTxt={""} />
           </section>
 
-          <section className="mb-8" id="version">
-            <TxtSection sectionTitle={"Versions"} infoTxt={""} />
-          </section>
-
-
-          <h3 className="text-2xl font-bold mb-4">Validate Secret</h3>
-          <section className="mb-8 lg:w-[70%] lg:mx-auto" id="validate">
-            <ValidationForm />
+          <section className="mb-8 lg:mx-auto" id="readme">
+            <Readme />
           </section>
 
           <section className="mb-8" id="faq">
