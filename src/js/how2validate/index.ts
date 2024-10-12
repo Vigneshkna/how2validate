@@ -6,6 +6,7 @@
  */
 
 import { Command } from "commander"; // Importing Commander for building CLI applications
+import validator from 'validator';
 import {
   getActiveSecretStatus,
   getInactiveSecretStatus,
@@ -23,7 +24,7 @@ import {
 } from "./utility/tool_utility.js"; // Importing utility functions for secret validation
 import { validatorHandleService } from "./handler/validator_handler.js"; // Importing the validation handler
 import { fileURLToPath } from "url";
-import { ValidationResult } from "./utility/validationResult.js";
+import { ValidationResult } from "./utility/interface/validationResult.js";
 
 /**
  * Creates a new instance of the Commander program to build the CLI application.
@@ -72,21 +73,23 @@ program
     `Explore the secret universe. Your next target awaits.`
   )
   .option(
-    "-provider <PROVIDER>",
+    "-p, --provider <PROVIDER>",
     `Specify your provider. Unleash your validation arsenal.`,
     (value: string) => validateChoice(value, providerChoices)
   )
   .option(
-    "-service <SERVICE>",
+    "-s, --service <SERVICE>",
     `Specify your target service. Validate your secrets with precision.`,
     (value: string) => validateChoice(value, serviceChoices)
   )
-  .option("-secret <SECRET>", "Unveil your secrets to verify their authenticity.")
+  .option("-sec, --secret <SECRET>", "Unveil your secrets to verify their authenticity.")
   .option(
     "-r, --response",
     `Monitor the status. View if your secret ${getActiveSecretStatus()} or ${getInactiveSecretStatus()}.`
   )
-  .option("-report", "Get detailed reports. Receive validated secrets via email [Alpha Feature].", false)
+  .option("-R, --report <E-mail>", "Get detailed reports. Receive validated secrets via email [Alpha Feature].",
+    (value: string) => validateEmail(value) // Use the validation function here
+  )
   .option("--update", "Hack the tool to the latest version.");
 
 /**
@@ -115,7 +118,7 @@ export function getService(provider: string): object {
  * @param {string} service - The service to validate the secret with.
  * @param {string} secret - The secret that needs to be validated.
  * @param {boolean} response - Whether to get a response status for the secret.
- * @param {boolean} report - Whether to generate a report for the validation.
+ * @param {string} report - Whether to generate a report for the validation.
  * @param {boolean} [isBrowser=false] - Whether the validation is being run in a browser environment.
  * @returns {Promise<void>} - A promise that resolves when validation is complete.
  * @throws Will throw an error if validation fails.
@@ -125,10 +128,11 @@ export async function validate(
   service: string,
   secret: string,
   response: boolean,
-  report: boolean,
+  report: string,
   isBrowser:boolean = false
-): Promise<{} | "" | ValidationResult | undefined> {
+): Promise<ValidationResult | string> {
   const result = await validatorHandleService(
+    formatString(provider),
     formatString(service),
     secret,
     response,
@@ -136,6 +140,21 @@ export async function validate(
     isBrowser
   ); // Call the handler for validation
   return result;
+}
+
+// Email validation function
+/**
+ * Validates an email address.
+ * @param {string} email - The email address to validate.
+ * @returns {string} The validated email address.
+ * @throws Will throw an error if the email is invalid.
+ */
+function validateEmail(email: string) {
+  if (validator.isEmail(email)) {
+    return email; // Return the email if valid
+  } else {
+    throw new Error(`Invalid email address: ${email}`);
+  }
 }
 
 /**
@@ -167,6 +186,13 @@ async function main(): Promise<void> {
       console.error(`Error fetching Scoped secret services: ${error}`);
       return;
     }
+  }
+
+  // Check and validate the -R --report email if all required arguments are provided
+  if (options.report && (!options.provider || !options.service || !options.secret)) {
+      console.error("Missing required arguments: -provider, -service, -secret");
+      console.error("Use '-h' or '--help' for tool usage information.");
+      return;
   }
 
   // Check for the update option

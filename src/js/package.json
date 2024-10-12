@@ -3,13 +3,16 @@
   "appName": "How2Validate",
   "version": "0.0.1-beta.26",
   "description": "A CLI tool to validate secrets for different services.",
-  "main": "dist/index.js",
+  "main": "dist/how2validate/index.js",
   "type": "module",
   "scripts": {
-    "build": "npm link && npx tsc && npx cpx './config.ini' dist/ && npx cpx './tokenManager.json' dist/",
-    "start": "node dist/index.js",
+    "build": "npm link && npx tsc && npx cpx './config.json' dist/ && npx cpx './tokenManager.json' dist/",
+    "start": "node dist/how2validate/index.js",
     "publishnpm": "npm publish",
-    "publishjsr": "npx jsr publish --allow-dirty"
+    "publishjsr": "npx jsr publish --allow-dirty",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
@@ -31,8 +34,10 @@
     "axios": "^1.7.7",
     "cli-table3": "^0.6.5",
     "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
     "jsr": "^0.13.2",
-    "loglevel": "^1.9.2"
+    "loglevel": "^1.9.2",
+    "zeptomail": "^6.0.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
@@ -40,20 +45,27 @@
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^12.0.1",
     "@semantic-release/release-notes-generator": "^14.0.1",
+    "@types/dotenv": "^8.2.0",
     "@types/ini": "^4.1.1",
+    "@types/jest": "^29.5.13",
     "@types/node": "^22.5.5",
+    "@types/validator": "^13.12.2",
     "cpx": "^1.2.1",
     "node-polyfill-webpack-plugin": "^4.0.0",
     "semantic-release": "^24.1.1",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.7.0-dev.20240928",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "validator": "^13.12.0",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.1.2",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
     "webpack-node-externals": "^3.0.0"
   },
   "files": [
     "how2validate/*",
-    "./config.ini",
+    "./config.json",
     "./tokenManager.json"
   ]
 }

@@ -5,7 +5,10 @@ import * as logging from "loglevel"; // Importing loglevel for logging messages
 import Table from 'cli-table3'; // Importing cli-table3 for formatted table display
 import { execSync } from "child_process";
 
-import { getAppName, getPackageName } from "./config_utility.js"; // Importing a function to get the package name from configuration
+import { getActiveSecretStatus, getInactiveSecretStatus, getPackageName } from "./config_utility.js"; // Importing a function to get the package name from configuration
+import { ValidationResult } from "./interface/validationResult.js";
+import { getSecretStatusMessage } from "./log_utility.js";
+import axios, { AxiosError } from "axios";
 
 // Convert import.meta.url to __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -19,7 +22,7 @@ const tokenManager_filePath = path.join(
   "tokenManager.json"
 );
 
-const appName = getAppName() || 'How2Validate'; // Initialize appName
+const appName = 'How2Validate'; // Initialize appName
 
 // Function to get the current timestamp in ISO format
 function getCurrentTimestamp(): string {
@@ -432,6 +435,19 @@ export function redactSecret(secret: string): string {
   return secret.slice(0, 5) + "*".repeat(secret.length - 5);
 }
 
+export function getUsernameFromEmail(email: string): string {
+  // Split the email at the "@" character to get the username
+  const username = email.split('@')[0];
+
+  // Convert the username to sentence case
+  const sentenceCaseUsername = username
+    .split('.')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+
+  return sentenceCaseUsername;
+}
+
 /**
  * Update the tool to the latest version using the appropriate package manager.
  */
@@ -482,3 +498,193 @@ function detectPackageManager(): string {
 
   return "unknown"; // Return unknown if none found
 }
+
+/**
+ * Handle the active secret status and create a ValidationResult.
+ * @param {string} service - The name of the service being validated.
+ * @param {any} responseData - The data from the API response.
+ * @param {boolean} responseFlag - A flag to indicate whether to include detailed response data.
+ * @param {string} report - The report string (usually an email).
+ * @param {string} provider - The provider name.
+ * @param {string} appName - The application name.
+ * @param {string} timestamp - The current timestamp.
+ * @param {boolean} isBrowser - Flag to indicate if the function is called from the browser.
+ * @returns {ValidationResult} - The ValidationResult object.
+ */
+export function handleActiveStatus(
+  provider: string,
+  service: string,
+  responseData: any,
+  responseFlag: boolean,
+  report: string,
+  isBrowser: boolean
+): ValidationResult {
+  const res = getSecretStatusMessage(
+    service,
+    getActiveSecretStatus() as string,
+    JSON.stringify(responseData.data, null, 4)
+  );
+
+  const activeResponseData: ValidationResult = {
+    status: responseData.status,
+    app: appName,
+    data: {
+      validate: {
+        state: res.state,
+        message: res.message,
+        response: res.response,
+        report: report ? report : "email@how2validate.com",
+      },
+      provider: provider,
+      services: service,
+    },
+    timestamp: getCurrentTimestamp(),
+  };
+
+  // Log the result if not in the browser environment
+  if (!isBrowser) {
+    console.info(`${res.message} ${responseFlag ? res.response : ""}`);
+  }
+
+  return activeResponseData;
+}
+
+
+/**
+ * Handle the case when the token is inactive or invalid.
+ *
+ * @function handleInactiveStatus
+ * @param {string} service - The name of the service being validated.
+ * @param {boolean} responseFlag - A flag to indicate whether to include detailed response data.
+ * @param {any} [data] - Optional additional data to include in the response.
+ * @param {boolean} [isBrowser] - Flag to indicate if the function is called from the browser.
+ *
+ * @returns {ValidationResult} - A validation result object indicating the inactive status.
+ */
+export function handleInactiveStatus(
+  provider: string,
+  service: string,
+  responseFlag: boolean,
+  data?: any,
+  report?: string,
+  isBrowser: boolean = false
+): ValidationResult{
+  const appName = "How2Validate";
+  const timestamp = getCurrentTimestamp();
+
+  const res = getSecretStatusMessage(
+    service,
+    getInactiveSecretStatus() as string,
+    data ? JSON.stringify(data) : "No additional data."
+  );
+
+  const inactiveResponseData = {
+    status: data.status,
+    app: appName,
+    data: {
+      validate: {
+        state: res.state,
+        message: res.message!,
+        response: res.response,
+        report: report ? report : "email@how2validate.com",
+      },
+      provider: provider,
+      services: service
+    },
+    timestamp,
+  };
+
+  if (!isBrowser) {
+    console.info(`${res.message} ${responseFlag ? res.response : ""}`);
+  }
+
+  return inactiveResponseData;
+}
+
+/**
+ * Handle errors that occur during the validation process.
+ *
+ * @function handleErrors
+ * @param {unknown} error - The error object that was thrown.
+ * @param {string} service - The name of the service being validated.
+ * @param {boolean} responseFlag - A flag to indicate whether to include detailed response data.
+ * @param {boolean} [isBrowser] - Flag to indicate if the function is called from the browser.
+ *
+ * @returns {ValidationResult} - A validation result object based on the type of error.
+ */
+export function handleErrors(
+  provider: string,
+  service: string,
+  responseFlag: boolean,
+  report: string,
+  error: unknown,
+  isBrowser: boolean = false
+): ValidationResult {
+  const appName = "How2Validate";
+  const timestamp = getCurrentTimestamp();
+
+  if (axios.isAxiosError(error)) {
+    const axiosError = error as AxiosError;
+    const status = axiosError.response?.status || 500;
+
+    const res = getSecretStatusMessage(
+      service,
+      getInactiveSecretStatus() as string,
+      axiosError.response?.data
+        ? JSON.stringify(axiosError.response?.data, null, 4)
+        : "Authentication failed."
+    );
+
+    const errResponseData: ValidationResult = {
+      status: status,
+      app: appName,
+      data: {
+        validate: {
+          state: res.state,
+          message: res.message,
+          response: res.response,
+          report: report ? report : "email@how2validate.com",
+        },
+        provider: provider,
+        services: service
+      },
+      timestamp,
+    };
+
+    if (!isBrowser) {
+      console.info(`${res.message} ${responseFlag ? res.response : ""}`);
+    }
+
+    return errResponseData;
+  }
+
+  return {
+    status: 500, // Default status
+    app: appName,
+    data: {
+      validate: {
+        state: getInactiveSecretStatus() as string,
+        message: "An unexpected error occurred.",
+        response: "{}",
+        report: report || "email@how2validate.com",
+      },
+      provider: provider,
+      services: service,
+    },
+    timestamp,
+  };;
+}
+
+/**
+ * Validates the response and modifies the message field based on the response flag.
+ * 
+ * @param {ValidationResult} activeRes - The active response object that contains validation data.
+ * @param {boolean} responseFlag - Flag to indicate whether to retain the original message or set it to an empty string.
+ */
+export function responseValidation(resData: ValidationResult, responseFlag: boolean): ValidationResult {
+  if (resData.data && resData.data.validate && resData.data.validate.message !== undefined) {
+    resData.data.validate.message = responseFlag ? resData.data.validate.message : "";
+  }
+  return resData;
+}
+
