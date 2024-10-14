@@ -22,7 +22,7 @@ export const Readme = () => {
           <div className="text mb-2">{"How2Validate addresses these concerns by providing a robust solution to verify the authenticity and validity of your secrets directly with official providers. This proactive approach helps in:"}</div>
           <ul className="list-disc list-inside">
               <li className="text-gray-700">Mitigating Risks: Prevent unauthorized access by ensuring only active secrets are used.</li>
-              <li className="text-gray-700">Enhancing Security Posture: Strengthen your application's security by regularly validating secrets.</li>
+              <li className="text-gray-700">Enhancing Security Posture: Strengthen your application&apos;s security by regularly validating secrets.</li>
           </ul>
 
 

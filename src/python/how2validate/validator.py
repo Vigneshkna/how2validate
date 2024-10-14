@@ -1,5 +1,6 @@
 import argparse
 import logging
+import re
 
 from how2validate.utility.config_utility import get_active_secret_status, get_inactive_secret_status, get_version
 from how2validate.utility.tool_utility import format_string, get_secretprovider, get_secretscope, get_secretservices, redact_secret, update_tool, validate_choice
@@ -11,43 +12,62 @@ setup_logging()
 
 # Custom formatter to remove choices display but keep custom help text
 class CustomHelpFormatter(argparse.RawTextHelpFormatter):
-    def _get_help_string(self, action):
-        help_msg = action.help
-        if action.choices:  # Remove choices from help string if present
-            help_msg = help_msg.split(" (choices:")[0]
-        return help_msg
+    """Custom help formatter for aligned options."""
+
+    def _format_action_invocation(self, action):
+        """Format action invocation with aligned option strings."""
+        parts = []
+        if action.option_strings:
+            # Format the option strings with a comma separator
+            parts.append(', '.join(action.option_strings))
+        if action.nargs in [argparse.OPTIONAL, argparse.ZERO_OR_MORE, argparse.ONE_OR_MORE]:
+            parts.append(f"<{action.dest.upper()}>")
+        return ' '.join(parts)
+
+def validate_email(email):
+    """Validate the provided email format."""
+    email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(email_regex, email) is not None
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-    prog="How2Validate Tool",
-    description="Validate various types of secrets for different services.",
-    usage="%(prog)s",
-    epilog="Ensuring the authenticity of your secrets.",
-    formatter_class=CustomHelpFormatter)
+        prog="How2Validate Tool",
+        description="Validate various types of secrets for different services.",
+        usage="%(prog)s [options]",
+        epilog="Ensuring the authenticity of your secrets.",
+        formatter_class=CustomHelpFormatter
+    )
 
     # Retrieve choices from environment variable
     provider = get_secretprovider()
     services = get_secretservices()
 
     # Define arguments
-    parser.add_argument('-secretscope',  action='store_true',
+    parser.add_argument('-secretscope', action='store_true',
                         help='Explore the secret universe. Your next target awaits.')
-    parser.add_argument('-provider',  type=lambda s: validate_choice(s, provider), required=False,
-                        help=f"Specify your provider. Unleash your validation arsenal.")
-    parser.add_argument('-service',  type=lambda s: validate_choice(s, services), required=False,
-                        help=f"Specify your target service. Validate your secrets with precision.")
-    parser.add_argument('-secret', required=False,
-                        help="Unveil your secrets to verify their authenticity.")
+    parser.add_argument('-p', '--provider', type=lambda s: validate_choice(s, provider), required=False,
+                        help='Specify your provider. Unleash your validation arsenal.')
+    parser.add_argument('-s', '--service', type=lambda s: validate_choice(s, services), required=False,
+                        help='Specify your target service. Validate your secrets with precision.')
+    parser.add_argument('-sec', '--secret', required=False,
+                        help='Unveil your secrets to verify their authenticity.')
     parser.add_argument('-r', '--response', action='store_true',
-                        help=f"Monitor the status. View if your secret {get_active_secret_status()} or {get_inactive_secret_status()}.")
-    parser.add_argument('-report', action='store_false', default=False,
-                        help=f"Get detailed reports. Receive validated secrets via email [Alpha Feature].")
-    parser.add_argument('-v', '--version', action='version', version=f'How2Validate Tool version {get_version()}', 
+                        help='Monitor the status. View if your secret is Active or InActive.')
+    parser.add_argument('-R', '--report', type=str, required=False,
+                        help='Get detailed reports. Receive validated secrets via email [Alpha Feature].')
+    parser.add_argument('-v', '--version', action='version', version=f'How2Validate Tool version {get_version()}',
                         help='Expose the version.')
     parser.add_argument('--update', action='store_true',
                         help='Hack the tool to the latest version.')
 
-    return parser.parse_args()
+    # Parse the arguments
+    args = parser.parse_args()
+
+    # Check if the report argument is provided and validate the email
+    if args.report and not validate_email(args.report):
+        parser.error("Invalid email address provided for --report option.")
+
+    return args
 
 def validate(provider,service, secret, response, report):
     

@@ -1,5 +1,5 @@
 import { How2validate } from "@/components/how2validate";
-import ReadmePage from "@/components/readme";
+// import ReadmePage from "@/components/readme";
 
 export default async function Home() {
   // const baseUrl = 'http://localhost:3000/api/getServices';
