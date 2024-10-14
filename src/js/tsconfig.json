@@ -9,7 +9,7 @@
     "skipLibCheck": true, // Skips type checking of declaration files (e.g., `.d.ts` files), speeding up the compilation process.
     "forceConsistentCasingInFileNames": true, // Ensures that file name casing is consistent across the project to prevent errors on case-sensitive file systems.
     "moduleResolution": "node",
-    "types": ["vitest/globals"],
+    "types": ["vitest"],
     "baseUrl": "./",
     "paths": {
       "@how2validate/*": ["./how2validate/*"],  // Example path alias
