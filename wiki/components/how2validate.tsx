@@ -4,13 +4,13 @@ import { useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs } from "./sections/tabs"
 import { TxtSection } from "./sections/text-section"
-import { ValidationForm } from "./sections/validations"
+// import { ValidationForm } from "./sections/validations"
 import { Foo } from "./sections/footer"
 import { Faq } from "./sections/faq"
 import { Header } from "./sections/header"
-import CodeBlock from "./sections/code-snippet"
-import { apiParams, apiParamsRec, apiPyParamsRec, apiPyReturns, apiReturns, cliString, codeStringJS, ex1, ex2, pyString, resStatus, secret } from "@/mocks/code-blocks"
-import RingBullet from "./sections/text-bulletin"
+// import CodeBlock from "./sections/code-snippet"
+// import { apiParams, apiParamsRec, apiPyParamsRec, apiPyReturns, apiReturns, cliString, codeStringJS, ex1, ex2, pyString, resStatus, secret } from "@/mocks/code-blocks"
+// import RingBullet from "./sections/text-bulletin"
 import { Readme } from "./sections/readme"
 
 export function How2validate() {
@@ -20,11 +20,11 @@ export function How2validate() {
     setTheme(theme === "light" ? "dark" : "light")
   }
 
-  const items = [
-    'Item 1: This is a description for item 1.',
-    'Item 2: This is a description for item 2.',
-    'Item 3: This is a description for item 3.',
-  ];
+  // const items = [
+  //   'Item 1: This is a description for item 1.',
+  //   'Item 2: This is a description for item 2.',
+  //   'Item 3: This is a description for item 3.',
+  // ];
 
   return (
     <div className={`min-h-screen ${theme === "dark" ? "dark" : ""}`}>
