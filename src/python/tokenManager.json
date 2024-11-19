@@ -3,7 +3,7 @@
         {
             "secret_type": "adafruit_io_key",
             "display_name": "Adafruit Io Key",
-            "is_enabled": false
+            "is_enabled": true
         }
     ],
     "Adobe": [
@@ -42,7 +42,7 @@
         {
             "secret_type": "aiven_auth_token",
             "display_name": "Aiven Auth Token",
-            "is_enabled": false
+            "is_enabled": true
         },
         {
             "secret_type": "aiven_service_password",
@@ -90,7 +90,7 @@
         {
             "secret_type": "anthropic_api_key",
             "display_name": "Anthropic Api Key",
-            "is_enabled": false
+            "is_enabled": true
         },
         {
             "secret_type": "anthropic_session_id",
@@ -909,12 +909,12 @@
         {
             "secret_type": "hf_org_api_key",
             "display_name": "Hf Org Api Key",
-            "is_enabled": false
+            "is_enabled": true
         },
         {
             "secret_type": "hf_user_access_token",
             "display_name": "Hf User Access Token",
-            "is_enabled": false
+            "is_enabled": true
         }
     ],
     "IBM": [
@@ -1241,7 +1241,7 @@
         {
             "secret_type": "pagerduty_api_key",
             "display_name": "Pagerduty Api Key",
-            "is_enabled": false
+            "is_enabled": true
         }
     ],
     "Palantir": [
@@ -1441,7 +1441,7 @@
         {
             "secret_type": "sentry_auth_token",
             "display_name": "Sentry Auth Token",
-            "is_enabled": false
+            "is_enabled": true
         }
     ],
     "Shippo": [
